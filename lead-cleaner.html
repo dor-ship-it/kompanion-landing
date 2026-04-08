@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ניקוי לידים – KompanionAI</title>
+  <title>Lead Cleaner – KompanionAI</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
   <style>
@@ -17,7 +17,7 @@
     .drop-zone.drag-over { border-color: #818cf8; background: rgba(129,140,248,0.08); }
     .drop-zone.has-file { border-color: rgba(52,211,153,0.4); background: rgba(52,211,153,0.04); }
     table { border-collapse: collapse; width: 100%; }
-    th { background: rgba(99,102,241,0.15); color: #818cf8; font-weight: 700; padding: 10px 14px; text-align: right; white-space: nowrap; font-size: 0.85rem; }
+    th { background: rgba(99,102,241,0.15); color: #818cf8; font-weight: 700; padding: 10px 14px; text-align: left; white-space: nowrap; font-size: 0.85rem; }
     td { padding: 8px 14px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #cbd5e1; font-size: 0.85rem; white-space: nowrap; max-width: 180px; overflow: hidden; text-overflow: ellipsis; }
     tr:last-child td { border-bottom: none; }
     tr:hover td { background: rgba(255,255,255,0.02); }
@@ -50,7 +50,7 @@
         Kompanion<span class="accent">AI</span>
       </a>
       <span class="bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-sm font-semibold px-3 py-1.5 rounded-full">
-        כלי ניקוי לידים
+        Lead Cleaner
       </span>
     </div>
   </nav>
@@ -58,16 +58,16 @@
   <main class="max-w-5xl mx-auto px-6 py-10">
 
     <div class="mb-8">
-      <h1 class="text-3xl font-extrabold mb-2">ניקוי וסידור קבצי לידים</h1>
-      <p class="text-slate-400 text-lg">העלה קובץ CSV / Excel או הדבק נתונים — וקבל קובץ מסודר ומוכן להעלאה</p>
+      <h1 class="text-3xl font-extrabold mb-2">Lead Data Cleanup</h1>
+      <p class="text-slate-400 text-lg">Upload a CSV / Excel file or paste data — get a clean, normalized file ready to import</p>
     </div>
 
     <!-- INPUT CARD -->
     <div class="card rounded-2xl p-8 mb-6">
 
       <div class="flex gap-2 mb-6 border-b border-white/5 pb-4">
-        <button class="tab-btn active" id="tab-file" onclick="switchTab('file')">העלאת קובץ</button>
-        <button class="tab-btn" id="tab-text" onclick="switchTab('text')">הדבקת טקסט</button>
+        <button class="tab-btn active" id="tab-file" onclick="switchTab('file')">Upload File</button>
+        <button class="tab-btn" id="tab-text" onclick="switchTab('text')">Paste Text</button>
       </div>
 
       <!-- FILE TAB -->
@@ -81,7 +81,7 @@
           ondrop="handleDrop(event)"
         >
           <div id="dz-icon" class="text-4xl mb-3">📂</div>
-          <p id="dz-main" class="text-slate-300 font-semibold text-lg mb-1">גרור לכאן קובץ, או לחץ לבחירה</p>
+          <p id="dz-main" class="text-slate-300 font-semibold text-lg mb-1">Drag & drop a file, or click to browse</p>
           <p id="dz-sub" class="text-slate-500 text-sm">CSV, XLS, XLSX</p>
           <input type="file" id="fileInput" accept=".csv,.xls,.xlsx" class="hidden" onchange="handleFileSelect(event)" />
         </div>
@@ -90,8 +90,8 @@
       <!-- TEXT TAB -->
       <div id="panel-text" class="hidden">
         <p class="text-slate-400 text-sm mb-3">
-          הדבק נתונים מ-Excel (Ctrl+C מהגיליון, Ctrl+V כאן) או CSV רגיל.
-          <span class="text-slate-500">השורה הראשונה = כותרות.</span>
+          Paste data from Excel (Ctrl+C from the sheet, Ctrl+V here) or plain CSV.
+          <span class="text-slate-500">First row must be column headers.</span>
         </p>
         <textarea
           id="textInput"
@@ -106,17 +106,17 @@
         <label class="toggle">
           <input type="checkbox" id="dedupToggle" checked />
           <span class="toggle-track"><span class="toggle-thumb"></span></span>
-          <span class="text-slate-300 text-sm font-medium">הסר כפילויות לפי טלפון</span>
+          <span class="text-slate-300 text-sm font-medium">Remove duplicates by phone</span>
         </label>
       </div>
 
       <!-- PROCESS ROW -->
       <div class="mt-5 flex items-center gap-4 flex-wrap">
         <button onclick="processData()" class="cta-btn text-white font-bold px-8 py-3.5 rounded-xl text-base">
-          עבד קובץ ←
+          Process →
         </button>
         <button onclick="resetAll()" class="text-slate-500 hover:text-slate-300 font-medium px-4 py-3.5 transition-colors text-sm">
-          נקה הכל
+          Clear all
         </button>
         <span id="process-error" class="text-red-400 text-sm hidden"></span>
       </div>
@@ -129,25 +129,25 @@
       <div class="grid grid-cols-4 gap-4 mb-5">
         <div class="card rounded-xl p-5 text-center">
           <div class="stat-num accent" id="stat-total">0</div>
-          <div class="text-slate-400 text-sm mt-1">לידים לאחר עיבוד</div>
+          <div class="text-slate-400 text-sm mt-1">Leads after processing</div>
         </div>
         <div class="card rounded-xl p-5 text-center">
           <div class="stat-num text-emerald-400" id="stat-original">0</div>
-          <div class="text-slate-400 text-sm mt-1">שורות מקור</div>
+          <div class="text-slate-400 text-sm mt-1">Source rows</div>
         </div>
         <div class="card rounded-xl p-5 text-center">
           <div class="stat-num text-amber-400" id="stat-dupes">0</div>
-          <div class="text-slate-400 text-sm mt-1">כפילויות הוסרו</div>
+          <div class="text-slate-400 text-sm mt-1">Duplicates removed</div>
         </div>
         <div class="card rounded-xl p-5 text-center">
           <div class="stat-num text-slate-500" id="stat-empty">0</div>
-          <div class="text-slate-400 text-sm mt-1">שורות ריקות</div>
+          <div class="text-slate-400 text-sm mt-1">Empty rows skipped</div>
         </div>
       </div>
 
       <!-- MAPPING BAR -->
       <div class="card rounded-xl px-5 py-4 mb-5">
-        <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-3">מיפוי עמודות</p>
+        <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-3">Column Mapping</p>
         <div id="mapping-tags" class="flex flex-wrap gap-2"></div>
       </div>
 
@@ -155,11 +155,11 @@
       <div class="card rounded-2xl overflow-hidden mb-6">
         <div class="flex items-center justify-between px-6 py-4 border-b border-white/5 gap-4">
           <h2 class="font-bold text-lg whitespace-nowrap">
-            תצוגה מקדימה
-            <span class="text-slate-500 font-normal text-sm mr-1">10 שורות ראשונות</span>
+            Preview
+            <span class="text-slate-500 font-normal text-sm ml-1">first 10 rows</span>
           </h2>
           <button onclick="downloadCSV()" class="cta-btn text-white font-semibold px-6 py-2.5 rounded-lg text-sm whitespace-nowrap">
-            ⬇ הורד CSV
+            ⬇ Download CSV
           </button>
         </div>
         <div class="overflow-x-auto">
@@ -185,9 +185,9 @@
       <!-- DOWNLOAD BOTTOM -->
       <div class="text-center pb-10">
         <button onclick="downloadCSV()" class="cta-btn text-white font-bold px-10 py-4 rounded-xl text-lg">
-          ⬇ הורד CSV מלא (<span id="dl-count">0</span> לידים)
+          ⬇ Download full CSV (<span id="dl-count">0</span> leads)
         </button>
-        <p class="text-slate-500 text-sm mt-3">UTF-8 עם BOM · תאימות מלאה עם Excel</p>
+        <p class="text-slate-500 text-sm mt-3">UTF-8 with BOM · Full Excel compatibility</p>
       </div>
     </div>
 
@@ -203,9 +203,9 @@
     // ── OUTPUT FIELDS ──────────────────────────────────────────────────────────
     const FIELDS = ['first_name','last_name','company','role','email','phone','alt_phone','tags','notes'];
     const FIELD_LABELS = {
-      first_name: 'שם פרטי', last_name: 'שם משפחה', company: 'חברה',
-      role: 'תפקיד', email: 'מייל', phone: 'טלפון',
-      alt_phone: 'טלפון נוסף', tags: 'תגיות', notes: 'הערות',
+      first_name: 'First Name', last_name: 'Last Name', company: 'Company',
+      role: 'Role', email: 'Email', phone: 'Phone',
+      alt_phone: 'Alt Phone', tags: 'Tags', notes: 'Notes',
     };
 
     // ── COLUMN ALIASES ─────────────────────────────────────────────────────────
@@ -253,12 +253,12 @@
 
     function loadFile(file) {
       const ext = file.name.split('.').pop().toLowerCase();
-      if (!['csv','xls','xlsx'].includes(ext)) { showError('סוג קובץ לא נתמך. השתמש ב-CSV, XLS או XLSX'); return; }
+      if (!['csv','xls','xlsx'].includes(ext)) { showError('Unsupported file type. Please use CSV, XLS or XLSX.'); return; }
       const dz = document.getElementById('dropzone');
       dz.classList.add('has-file');
       document.getElementById('dz-icon').textContent = ext === 'csv' ? '📄' : '📊';
       document.getElementById('dz-main').textContent = file.name;
-      document.getElementById('dz-sub').textContent  = (file.size/1024).toFixed(1) + ' KB · לחץ להחליף';
+      document.getElementById('dz-sub').textContent  = (file.size/1024).toFixed(1) + ' KB · click to change';
       hideError();
       const reader = new FileReader();
       if (ext === 'csv') {
@@ -368,16 +368,16 @@
       let parsed = null;
       try {
         if (activeTab === 'file') {
-          if (!rawFileData) { showError('אנא בחר קובץ תחילה'); return; }
+          if (!rawFileData) { showError('Please select a file first.'); return; }
           parsed = rawFileType === 'csv' ? parseCSVText(rawFileData) : parseExcel(rawFileData);
         } else {
           const text = document.getElementById('textInput').value.trim();
-          if (!text) { showError('אנא הדבק נתונים תחילה'); return; }
+          if (!text) { showError('Please paste some data first.'); return; }
           parsed = parseCSVText(text);
         }
-      } catch (err) { showError('שגיאה בפענוח הקובץ: ' + err.message); return; }
+      } catch (err) { showError('Error parsing file: ' + err.message); return; }
 
-      if (!parsed || !parsed.rows.length) { showError('לא נמצאו נתונים תקינים בקלט'); return; }
+      if (!parsed || !parsed.rows.length) { showError('No valid data found in the input.'); return; }
 
       const { headers, rows } = parsed;
       const totalRaw = rows.length;
@@ -452,10 +452,10 @@
         let note = '';
         if (!src && (f === 'first_name' || f === 'last_name') && cm.full_name) {
           src  = cm.full_name;
-          note = f === 'first_name' ? ' (פיצול ראשון)' : ' (פיצול שני)';
+          note = f === 'first_name' ? ' (split: first)' : ' (split: last)';
         }
         if (src) return `<span class="mtag"><span class="f">${FIELD_LABELS[f]}</span><span style="color:#475569">←</span><span class="s">${esc(src)}${note}</span></span>`;
-        return `<span class="mtag miss"><span class="f">${FIELD_LABELS[f]}</span><span style="color:#64748b;font-size:0.75rem">לא זוהה</span></span>`;
+        return `<span class="mtag miss"><span class="f">${FIELD_LABELS[f]}</span><span style="color:#64748b;font-size:0.75rem">not detected</span></span>`;
       }).join('');
     }
 
@@ -505,7 +505,7 @@
       const dz=document.getElementById('dropzone');
       dz.classList.remove('has-file','drag-over');
       document.getElementById('dz-icon').textContent='📂';
-      document.getElementById('dz-main').textContent='גרור לכאן קובץ, או לחץ לבחירה';
+      document.getElementById('dz-main').textContent='Drag & drop a file, or click to browse';
       document.getElementById('dz-sub').textContent='CSV, XLS, XLSX';
       document.getElementById('results-section').classList.add('hidden');
       hideError();
