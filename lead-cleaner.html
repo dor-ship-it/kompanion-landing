@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ניקוי לידים – KompanionAI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap');
+    body { font-family: 'Assistant', sans-serif; background: #020617; color: white; }
+    .accent { color: #818cf8; }
+    .cta-btn {
+      background: linear-gradient(135deg, #6366f1, #818cf8);
+      transition: all 0.2s ease;
+    }
+    .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(99,102,241,0.4); }
+    .cta-btn:disabled { opacity: 0.5; transform: none; box-shadow: none; cursor: not-allowed; }
+    .card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); }
+    .drop-zone { border: 2px dashed rgba(129,140,248,0.3); transition: all 0.2s; }
+    .drop-zone.drag-over { border-color: #818cf8; background: rgba(129,140,248,0.08); }
+    .drop-zone.has-file { border-color: rgba(52,211,153,0.4); background: rgba(52,211,153,0.04); }
+    table { border-collapse: collapse; width: 100%; }
+    th { background: rgba(99,102,241,0.15); color: #818cf8; font-weight: 700; padding: 10px 16px; text-align: right; white-space: nowrap; font-size: 0.9rem; }
+    td { padding: 9px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #cbd5e1; font-size: 0.875rem; white-space: nowrap; max-width: 220px; overflow: hidden; text-overflow: ellipsis; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+    .tab-btn { padding: 8px 20px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; transition: all 0.15s; cursor: pointer; border: none; background: transparent; color: white; }
+    .tab-btn.active { background: rgba(99,102,241,0.2); color: #818cf8; }
+    .tab-btn:not(.active) { color: #64748b; }
+    .tab-btn:not(.active):hover { color: #94a3b8; }
+    .mapping-tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; padding: 3px 10px; font-size: 0.8rem; }
+    .mapping-tag .field { color: #818cf8; font-weight: 700; }
+    .mapping-tag .source { color: #94a3b8; }
+    .mapping-tag.missing { border-color: rgba(251,191,36,0.2); background: rgba(251,191,36,0.05); }
+    .mapping-tag.missing .field { color: #fbbf24; }
+    ::-webkit-scrollbar { height: 5px; width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+    .stat-num { font-size: 2.2rem; font-weight: 800; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <nav class="border-b border-white/5 bg-slate-950/90 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="index.html" class="text-xl font-bold tracking-tight hover:opacity-80 transition-opacity">
+        Kompanion<span class="accent">AI</span>
+      </a>
+      <span class="bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-sm font-semibold px-3 py-1.5 rounded-full">
+        כלי ניקוי לידים
+      </span>
+    </div>
+  </nav>
+
+  <main class="max-w-5xl mx-auto px-6 py-10">
+
+    <!-- TITLE -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-extrabold mb-2">ניקוי וסידור קבצי לידים</h1>
+      <p class="text-slate-400 text-lg">העלה קובץ CSV / Excel או הדבק נתונים — וקבל קובץ מסודר ומוכן להעלאה</p>
+    </div>
+
+    <!-- INPUT CARD -->
+    <div class="card rounded-2xl p-8 mb-6">
+
+      <!-- TABS -->
+      <div class="flex gap-2 mb-6 border-b border-white/5 pb-4">
+        <button class="tab-btn active" id="tab-file" onclick="switchTab('file')">העלאת קובץ</button>
+        <button class="tab-btn" id="tab-text" onclick="switchTab('text')">הדבקת טקסט</button>
+      </div>
+
+      <!-- FILE UPLOAD TAB -->
+      <div id="panel-file">
+        <div
+          class="drop-zone rounded-xl p-12 text-center cursor-pointer select-none"
+          id="dropzone"
+          onclick="document.getElementById('fileInput').click()"
+          ondragover="handleDragOver(event)"
+          ondragleave="handleDragLeave(event)"
+          ondrop="handleDrop(event)"
+        >
+          <div id="dz-icon" class="text-4xl mb-3">📂</div>
+          <p id="dz-main" class="text-slate-300 font-semibold text-lg mb-1">גרור לכאן קובץ, או לחץ לבחירה</p>
+          <p id="dz-sub" class="text-slate-500 text-sm">CSV, XLS, XLSX</p>
+          <input type="file" id="fileInput" accept=".csv,.xls,.xlsx" class="hidden" onchange="handleFileSelect(event)" />
+        </div>
+      </div>
+
+      <!-- TEXT PASTE TAB -->
+      <div id="panel-text" class="hidden">
+        <p class="text-slate-400 text-sm mb-3">
+          הדבק נתונים מ-Excel (Ctrl+C מהגיליון ואז Ctrl+V) או טקסט בפורמט CSV / גרשיים-פסיקים.
+          <span class="text-slate-500">השורה הראשונה = כותרות עמודות.</span>
+        </p>
+        <textarea
+          id="textInput"
+          class="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition-all font-mono text-sm resize-none"
+          rows="10"
+          placeholder="שם,טלפון,מייל,תפקיד,חברה&#10;ישראל ישראלי,0521234567,israel@example.com,מנכ&quot;ל,חברת דוגמה&#10;..."
+          dir="ltr"
+          spellcheck="false"
+        ></textarea>
+      </div>
+
+      <!-- PROCESS BUTTON ROW -->
+      <div class="mt-6 flex items-center gap-4 flex-wrap">
+        <button
+          id="processBtn"
+          onclick="processData()"
+          class="cta-btn text-white font-bold px-8 py-3.5 rounded-xl text-base"
+        >
+          עבד קובץ ←
+        </button>
+        <button
+          onclick="resetAll()"
+          class="text-slate-500 hover:text-slate-300 font-medium px-4 py-3.5 transition-colors text-sm"
+        >
+          נקה הכל
+        </button>
+        <span id="process-error" class="text-red-400 text-sm hidden"></span>
+      </div>
+    </div>
+
+    <!-- RESULTS SECTION -->
+    <div id="results-section" class="hidden">
+
+      <!-- STATS -->
+      <div class="grid grid-cols-3 gap-4 mb-5">
+        <div class="card rounded-xl p-5 text-center">
+          <div class="stat-num accent" id="stat-total">0</div>
+          <div class="text-slate-400 text-sm mt-1">לידים לאחר עיבוד</div>
+        </div>
+        <div class="card rounded-xl p-5 text-center">
+          <div class="stat-num text-emerald-400" id="stat-original">0</div>
+          <div class="text-slate-400 text-sm mt-1">שורות מקור</div>
+        </div>
+        <div class="card rounded-xl p-5 text-center">
+          <div class="stat-num text-amber-400" id="stat-dupes">0</div>
+          <div class="text-slate-400 text-sm mt-1">כפילויות הוסרו</div>
+        </div>
+      </div>
+
+      <!-- COLUMN MAPPING -->
+      <div id="mapping-bar" class="card rounded-xl px-5 py-4 mb-5">
+        <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-3">מיפוי עמודות שזוהה</p>
+        <div id="mapping-tags" class="flex flex-wrap gap-2"></div>
+      </div>
+
+      <!-- PREVIEW TABLE -->
+      <div class="card rounded-2xl overflow-hidden mb-6">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-white/5 gap-4">
+          <h2 class="font-bold text-lg whitespace-nowrap">
+            תצוגה מקדימה
+            <span class="text-slate-500 font-normal text-sm mr-1">10 שורות ראשונות</span>
+          </h2>
+          <button
+            onclick="downloadCSV()"
+            class="cta-btn text-white font-semibold px-6 py-2.5 rounded-lg text-sm whitespace-nowrap flex items-center gap-2"
+          >
+            ⬇ הורד CSV
+          </button>
+        </div>
+        <div class="overflow-x-auto">
+          <table id="previewTable">
+            <thead>
+              <tr>
+                <th>name</th>
+                <th>phone</th>
+                <th>email</th>
+                <th>role</th>
+                <th>company</th>
+                <th>tags</th>
+              </tr>
+            </thead>
+            <tbody id="previewBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- DOWNLOAD (bottom) -->
+      <div class="text-center pb-10">
+        <button onclick="downloadCSV()" class="cta-btn text-white font-bold px-10 py-4 rounded-xl text-lg">
+          ⬇ הורד CSV מלא (<span id="dl-count">0</span> לידים)
+        </button>
+        <p class="text-slate-500 text-sm mt-3">הקובץ נשמר ב-UTF-8 עם BOM לתאימות מלאה עם Excel</p>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    // ── STATE ──────────────────────────────────────────────────────────────
+    let processedData = [];
+    let activeTab     = 'file';
+    let rawFileData   = null;
+    let rawFileType   = null;
+
+    // ── COLUMN ALIASES ─────────────────────────────────────────────────────
+    const ALIASES = {
+      name:    ['name','fullname','full_name','full name','שם','שם מלא','שם_מלא','contact name',
+                'first name','firstname','שם פרטי','שם_פרטי','contact','שם+שם משפחה','lead name',
+                'שם ליד'],
+      phone:   ['phone','mobile','tel','telephone','cell','cellphone','phonenumber','phone number',
+                'phone_number','טלפון','נייד','מובייל','פלאפון','מס טלפון','phone1','mobile1',
+                'cell phone','טל',"טל'",'phone #','mobile phone','מס\' טלפון'],
+      email:   ['email','mail','e-mail','email address','email_address','אימייל','מייל',
+                'דואר אלקטרוני','דוא"ל','כתובת מייל'],
+      role:    ['role','title','job','position','job title','job_title','jobtitle','תפקיד','משרה',
+                'תואר','role/title','direct title'],
+      company: ['company','organization','organisation','org','firm','business','company name',
+                'company_name','חברה','ארגון','עסק','שם חברה','account name','account'],
+      tags:    ['tags','tag','category','categories','label','labels','segment','source','type',
+                'קטגוריה','תגיות','תגית','מקור','ערוץ','lead source','סוג'],
+    };
+
+    // ── TAB SWITCHING ───────────────────────────────────────────────────────
+    function switchTab(tab) {
+      activeTab = tab;
+      document.getElementById('tab-file').classList.toggle('active', tab === 'file');
+      document.getElementById('tab-text').classList.toggle('active', tab === 'text');
+      document.getElementById('panel-file').classList.toggle('hidden', tab !== 'file');
+      document.getElementById('panel-text').classList.toggle('hidden', tab !== 'text');
+      hideError();
+    }
+
+    // ── DRAG & DROP ─────────────────────────────────────────────────────────
+    function handleDragOver(e) {
+      e.preventDefault();
+      document.getElementById('dropzone').classList.add('drag-over');
+    }
+    function handleDragLeave() {
+      document.getElementById('dropzone').classList.remove('drag-over');
+    }
+    function handleDrop(e) {
+      e.preventDefault();
+      document.getElementById('dropzone').classList.remove('drag-over');
+      const file = e.dataTransfer.files[0];
+      if (file) loadFile(file);
+    }
+    function handleFileSelect(e) {
+      const file = e.target.files[0];
+      if (file) loadFile(file);
+    }
+
+    function loadFile(file) {
+      const ext = file.name.split('.').pop().toLowerCase();
+      if (!['csv','xls','xlsx'].includes(ext)) {
+        showError('סוג קובץ לא נתמך. אנא השתמש ב-CSV, XLS או XLSX');
+        return;
+      }
+      const dz = document.getElementById('dropzone');
+      dz.classList.add('has-file');
+      document.getElementById('dz-icon').textContent = ext === 'csv' ? '📄' : '📊';
+      document.getElementById('dz-main').textContent = file.name;
+      document.getElementById('dz-sub').textContent =
+        (file.size / 1024).toFixed(1) + ' KB · לחץ כדי להחליף';
+      hideError();
+
+      const reader = new FileReader();
+      if (ext === 'csv') {
+        reader.onload = (e) => { rawFileData = e.target.result; rawFileType = 'csv'; };
+        reader.readAsText(file, 'UTF-8');
+      } else {
+        reader.onload = (e) => { rawFileData = e.target.result; rawFileType = 'excel'; };
+        reader.readAsArrayBuffer(file);
+      }
+    }
+
+    // ── PARSING ─────────────────────────────────────────────────────────────
+    function detectDelimiter(text) {
+      const line = text.split('\n')[0];
+      const scores = {
+        '\t': (line.match(/\t/g) || []).length,
+        ',':  (line.match(/,/g)  || []).length,
+        ';':  (line.match(/;/g)  || []).length,
+      };
+      return Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
+    }
+
+    function parseCSVLine(line, delim) {
+      const result = [];
+      let cur = '', inQ = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') {
+          if (inQ && line[i+1] === '"') { cur += '"'; i++; }
+          else inQ = !inQ;
+        } else if (ch === delim && !inQ) {
+          result.push(cur); cur = '';
+        } else {
+          cur += ch;
+        }
+      }
+      result.push(cur);
+      return result;
+    }
+
+    function parseCSVText(text) {
+      const delim   = detectDelimiter(text);
+      const lines   = text.trim().split(/\r?\n/);
+      if (lines.length < 2) return null;
+      const headers = parseCSVLine(lines[0], delim).map(h => h.trim());
+      const rows = [];
+      for (let i = 1; i < lines.length; i++) {
+        if (!lines[i].trim()) continue;
+        const vals = parseCSVLine(lines[i], delim);
+        const obj  = {};
+        headers.forEach((h, idx) => { obj[h] = (vals[idx] || '').trim(); });
+        rows.push(obj);
+      }
+      return { headers, rows };
+    }
+
+    function parseExcel(buf) {
+      const wb   = XLSX.read(buf, { type: 'array' });
+      const ws   = wb.Sheets[wb.SheetNames[0]];
+      const data = XLSX.utils.sheet_to_json(ws, { defval: '', raw: false });
+      const headers = data.length > 0 ? Object.keys(data[0]) : [];
+      return { headers, rows: data };
+    }
+
+    // ── COLUMN MAPPING ──────────────────────────────────────────────────────
+    function mapColumn(headers, field) {
+      const aliases = ALIASES[field];
+      // Exact match first
+      for (const h of headers) {
+        if (aliases.some(a => a.toLowerCase() === h.trim().toLowerCase())) return h;
+      }
+      // Partial match (header contains alias or alias contains header)
+      for (const h of headers) {
+        const hn = h.trim().toLowerCase();
+        if (aliases.some(a => hn.includes(a.toLowerCase()) || a.toLowerCase().includes(hn))) return h;
+      }
+      return null;
+    }
+
+    // ── PHONE CLEANING ──────────────────────────────────────────────────────
+    function cleanPhone(raw) {
+      if (raw === null || raw === undefined || raw === '') return '';
+      const str = String(raw).trim();
+      // Take only the first "phone token" if cell contains multiple (/ ; | space+digit)
+      const firstToken = str.split(/[\/;|]|(?<=\d)\s+(?=0|\+)/).map(s => s.trim())[0] || str;
+      let d = firstToken.replace(/\D/g, '');
+      if (!d) return '';
+      // Normalize country code
+      if (d.startsWith('00972'))      d = '0' + d.slice(5);
+      else if (d.startsWith('972') && d.length >= 10) d = '0' + d.slice(3);
+      // Restore leading zero lost by Excel number formatting
+      if (d.length === 9 && !d.startsWith('0')) d = '0' + d;
+      return d;
+    }
+
+    // ── MAIN PROCESS ────────────────────────────────────────────────────────
+    function processData() {
+      hideError();
+      let parsed = null;
+
+      try {
+        if (activeTab === 'file') {
+          if (!rawFileData) { showError('אנא בחר קובץ תחילה'); return; }
+          parsed = rawFileType === 'csv' ? parseCSVText(rawFileData) : parseExcel(rawFileData);
+        } else {
+          const text = document.getElementById('textInput').value.trim();
+          if (!text) { showError('אנא הדבק נתונים תחילה'); return; }
+          parsed = parseCSVText(text);
+        }
+      } catch (err) {
+        showError('שגיאה בפענוח הקובץ: ' + err.message);
+        return;
+      }
+
+      if (!parsed || parsed.rows.length === 0) {
+        showError('לא נמצאו נתונים תקינים בקלט');
+        return;
+      }
+
+      const { headers, rows } = parsed;
+      const originalCount = rows.length;
+
+      // Build column map
+      const colMap = {};
+      ['name','phone','email','role','company','tags'].forEach(f => {
+        colMap[f] = mapColumn(headers, f);
+      });
+
+      // Process rows
+      const seen   = new Set();
+      const result = [];
+
+      for (const row of rows) {
+        const anyData = Object.values(row).some(v => String(v).trim());
+        if (!anyData) continue;
+
+        const phone = cleanPhone(colMap.phone ? row[colMap.phone] : '');
+
+        if (phone && seen.has(phone)) continue;
+        if (phone) seen.add(phone);
+
+        result.push({
+          name:    colMap.name    ? String(row[colMap.name]    || '').trim() : '',
+          phone,
+          email:   colMap.email   ? String(row[colMap.email]   || '').trim() : '',
+          role:    colMap.role    ? String(row[colMap.role]    || '').trim() : '',
+          company: colMap.company ? String(row[colMap.company] || '').trim() : '',
+          tags:    colMap.tags    ? String(row[colMap.tags]    || '').trim() : '',
+        });
+      }
+
+      processedData = result;
+
+      // Stats
+      document.getElementById('stat-total').textContent    = result.length.toLocaleString('he-IL');
+      document.getElementById('stat-original').textContent = originalCount.toLocaleString('he-IL');
+      document.getElementById('stat-dupes').textContent    = (originalCount - result.length).toLocaleString('he-IL');
+      document.getElementById('dl-count').textContent      = result.length.toLocaleString('he-IL');
+
+      // Mapping bar
+      renderMappingBar(colMap);
+
+      // Preview
+      renderPreview(result.slice(0, 10));
+
+      document.getElementById('results-section').classList.remove('hidden');
+      setTimeout(() => {
+        document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 50);
+    }
+
+    function renderMappingBar(colMap) {
+      const fields  = ['name','phone','email','role','company','tags'];
+      const labels  = { name: 'שם', phone: 'טלפון', email: 'מייל', role: 'תפקיד', company: 'חברה', tags: 'תגיות' };
+      const container = document.getElementById('mapping-tags');
+      container.innerHTML = fields.map(f => {
+        const src = colMap[f];
+        if (src) {
+          return `<span class="mapping-tag">
+            <span class="field">${labels[f]}</span>
+            <span style="color:#475569">←</span>
+            <span class="source">${esc(src)}</span>
+          </span>`;
+        } else {
+          return `<span class="mapping-tag missing">
+            <span class="field">${labels[f]}</span>
+            <span style="color:#64748b;font-size:0.75rem">לא זוהה</span>
+          </span>`;
+        }
+      }).join('');
+    }
+
+    function renderPreview(rows) {
+      document.getElementById('previewBody').innerHTML = rows.map(r => `
+        <tr>
+          <td title="${esc(r.name)}">${esc(r.name) || '<span style="color:#475569">—</span>'}</td>
+          <td dir="ltr">${esc(r.phone) || '<span style="color:#475569">—</span>'}</td>
+          <td dir="ltr">${esc(r.email) || '<span style="color:#475569">—</span>'}</td>
+          <td title="${esc(r.role)}">${esc(r.role) || '<span style="color:#475569">—</span>'}</td>
+          <td title="${esc(r.company)}">${esc(r.company) || '<span style="color:#475569">—</span>'}</td>
+          <td title="${esc(r.tags)}">${esc(r.tags) || '<span style="color:#475569">—</span>'}</td>
+        </tr>
+      `).join('');
+    }
+
+    // ── CSV DOWNLOAD ────────────────────────────────────────────────────────
+    function downloadCSV() {
+      if (!processedData.length) return;
+      const FIELDS = ['name','phone','email','role','company','tags'];
+      const lines  = [FIELDS.join(',')];
+
+      for (const row of processedData) {
+        const vals = FIELDS.map(f => {
+          const v = String(row[f] || '');
+          return (v.includes(',') || v.includes('\n') || v.includes('"'))
+            ? '"' + v.replace(/"/g, '""') + '"'
+            : v;
+        });
+        lines.push(vals.join(','));
+      }
+
+      const bom  = '\uFEFF';
+      const csv  = bom + lines.join('\r\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
+      a.download = 'leads-cleaned-' + new Date().toISOString().slice(0,10) + '.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // ── UTILS ───────────────────────────────────────────────────────────────
+    function esc(s) {
+      return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+    function showError(msg) {
+      const el = document.getElementById('process-error');
+      el.textContent = msg;
+      el.classList.remove('hidden');
+    }
+    function hideError() {
+      document.getElementById('process-error').classList.add('hidden');
+    }
+    function resetAll() {
+      rawFileData = null; rawFileType = null; processedData = [];
+      document.getElementById('fileInput').value   = '';
+      document.getElementById('textInput').value   = '';
+      const dz = document.getElementById('dropzone');
+      dz.classList.remove('has-file','drag-over');
+      document.getElementById('dz-icon').textContent = '📂';
+      document.getElementById('dz-main').textContent = 'גרור לכאן קובץ, או לחץ לבחירה';
+      document.getElementById('dz-sub').textContent  = 'CSV, XLS, XLSX';
+      document.getElementById('results-section').classList.add('hidden');
+      hideError();
+    }
+  </script>
+</body>
+</html>
