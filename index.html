@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KompanionAI – שיחות מכירה שעובדות בשבילך</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap');
+    body { font-family: 'Assistant', sans-serif; }
+    .gradient-hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+    }
+    .accent { color: #818cf8; }
+    .accent-bg { background-color: #818cf8; }
+    .accent-border { border-color: #818cf8; }
+    .card-dark {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .stat-number {
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #818cf8, #c4b5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .step-number {
+      width: 2.5rem;
+      height: 2.5rem;
+      background: linear-gradient(135deg, #818cf8, #6366f1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1rem;
+      color: white;
+      flex-shrink: 0;
+    }
+    .cta-btn {
+      background: linear-gradient(135deg, #6366f1, #818cf8);
+      transition: all 0.2s ease;
+    }
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(99,102,241,0.4);
+    }
+    .pain-item::before {
+      content: '✗';
+      color: #f87171;
+      font-weight: 800;
+      margin-left: 0.5rem;
+    }
+    .check-item::before {
+      content: '✓';
+      color: #818cf8;
+      font-weight: 800;
+      margin-left: 0.5rem;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-white">
+
+  <!-- NAV -->
+  <nav class="fixed top-0 w-full z-50 bg-slate-950/90 backdrop-blur border-b border-white/5">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <span class="text-xl font-bold tracking-tight">Kompanion<span class="accent">AI</span></span>
+      <a href="#contact" class="cta-btn text-white text-sm font-semibold px-5 py-2.5 rounded-lg">
+        רוצה לדעת יותר?
+      </a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="gradient-hero min-h-screen flex items-center pt-24 pb-20">
+    <div class="max-w-5xl mx-auto px-6 text-center">
+      <div class="inline-block bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-sm font-medium px-4 py-1.5 rounded-full mb-8">
+        Voice AI לצוותי מכירות B2B
+      </div>
+
+      <h1 class="text-5xl md:text-7xl font-extrabold leading-tight mb-6 tracking-tight">
+        ה-SDR שלך<br/>
+        <span class="accent">לא ישן לעולם.</span>
+      </h1>
+
+      <p class="text-slate-300 text-xl md:text-2xl max-w-2xl mx-auto mb-10 leading-relaxed">
+        KompanionAI מבצעת שיחות טלפון ראשוניות בשמך —<br/>
+        מסננת לידים, מנהלת שיחות פתיחה, ומעבירה לצוות שלך רק את מי ששווה את הזמן.
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="#contact" class="cta-btn text-white font-bold px-8 py-4 rounded-xl text-lg">
+          בוא נדבר על הפיילוט שלך
+        </a>
+        <a href="#how" class="border border-white/20 hover:border-white/40 text-white font-semibold px-8 py-4 rounded-xl text-lg transition-all">
+          איך זה עובד?
+        </a>
+      </div>
+
+      <div class="mt-16 grid grid-cols-3 gap-6 max-w-xl mx-auto text-center">
+        <div>
+          <div class="stat-number">×4</div>
+          <div class="text-slate-400 text-sm mt-1">יותר שיחות רלוונטיות</div>
+        </div>
+        <div>
+          <div class="stat-number">70%</div>
+          <div class="text-slate-400 text-sm mt-1">פחות זמן מבוזבז</div>
+        </div>
+        <div>
+          <div class="stat-number">24/7</div>
+          <div class="text-slate-400 text-sm mt-1">ללא הפסקה</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="py-24 bg-slate-950">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl md:text-5xl font-extrabold mb-4">
+          הבעיה האמיתית של כל צוות מכירות
+        </h2>
+        <p class="text-slate-400 text-lg max-w-xl mx-auto">
+          לא חסרות לידים. חסר זמן לעסוק בכולם כמו שצריך.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="card-dark rounded-2xl p-8">
+          <h3 class="text-2xl font-bold mb-6 text-red-400">מה קורה בפועל</h3>
+          <ul class="space-y-4 text-slate-300 text-lg">
+            <li class="pain-item">70% מהשיחות של SDR מסתיימות בלי תגובה</li>
+            <li class="pain-item">אנשי המכירות שלך מבלים שעות על לידים קרים</li>
+            <li class="pain-item">Follow-up מתאחר — הליד כבר שכח אותך</li>
+            <li class="pain-item">לידים טובים נופלים בין הכיסאות כי אין כוח אדם</li>
+            <li class="pain-item">SDR חדש לוקח 3–6 חודשים להגיע לביצועים</li>
+          </ul>
+        </div>
+
+        <div class="card-dark rounded-2xl p-8">
+          <h3 class="text-2xl font-bold mb-6 accent">מה KompanionAI עושה</h3>
+          <ul class="space-y-4 text-slate-300 text-lg">
+            <li class="check-item">מתקשרת לכל ליד תוך דקות מרגע שנכנס</li>
+            <li class="check-item">מנהלת שיחה אמיתית, מקצועית, בשפה טבעית</li>
+            <li class="check-item">מסננת ומבינה מי רלוונטי ומי לא</li>
+            <li class="check-item">מתאמת פגישות ישירות ליומן הצוות</li>
+            <li class="check-item">מעבירה לך רק לידים חמים עם תמצית השיחה</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how" class="py-24 bg-slate-900/40">
+    <div class="max-w-4xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl md:text-5xl font-extrabold mb-4">
+          שלושה שלבים. זהו.
+        </h2>
+        <p class="text-slate-400 text-lg">
+          ההגדרה לוקחת שעות. הפעלה — דקות.
+        </p>
+      </div>
+
+      <div class="space-y-8">
+        <div class="card-dark rounded-2xl p-8 flex gap-6 items-start">
+          <div class="step-number">1</div>
+          <div>
+            <h3 class="text-2xl font-bold mb-2">מגדירים את הפרופיל שלך</h3>
+            <p class="text-slate-400 text-lg leading-relaxed">
+              מי הלקוח האידיאלי שלך, מה השאלות שחשוב לשאול, מה הטון המתאים — KompanionAI מתאימה את עצמה לעסק שלך, לא להיפך.
+            </p>
+          </div>
+        </div>
+
+        <div class="card-dark rounded-2xl p-8 flex gap-6 items-start">
+          <div class="step-number">2</div>
+          <div>
+            <h3 class="text-2xl font-bold mb-2">המערכת מתקשרת — אתה לא עושה כלום</h3>
+            <p class="text-slate-400 text-lg leading-relaxed">
+              ברגע שליד נכנס, KompanionAI מתקשרת אוטומטית. מנהלת שיחה, שואלת, מקשיבה, ומבינה מי באמת מעוניין. בשעות שאתה בפגישה. בלילה. בסוף שבוע.
+            </p>
+          </div>
+        </div>
+
+        <div class="card-dark rounded-2xl p-8 flex gap-6 items-start">
+          <div class="step-number">3</div>
+          <div>
+            <h3 class="text-2xl font-bold mb-2">אתה מקבל רק את הלידים שמגיעים לך</h3>
+            <p class="text-slate-400 text-lg leading-relaxed">
+              כל ליד שעבר סינון מגיע אליך עם תמצית השיחה, רמת העניין, והמלצה לשלב הבא. פגישות שמתואמות — כבר ביומן. שאר הלידים — מנוהלים אוטומטית.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="py-24 bg-slate-950">
+    <div class="max-w-5xl mx-auto px-6 text-center">
+      <h2 class="text-4xl md:text-5xl font-extrabold mb-4">
+        מספרים שמדברים בפני עצמם
+      </h2>
+      <p class="text-slate-400 text-lg mb-16">על בסיס אלפי שיחות שביצענו עד היום</p>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div class="card-dark rounded-2xl p-8">
+          <div class="stat-number">5,000+</div>
+          <div class="text-slate-400 mt-2">שיחות בוצעו</div>
+        </div>
+        <div class="card-dark rounded-2xl p-8">
+          <div class="stat-number">68%</div>
+          <div class="text-slate-400 mt-2">אחוז שיחות שהסתיימו בסינון מוצלח</div>
+        </div>
+        <div class="card-dark rounded-2xl p-8">
+          <div class="stat-number">3×</div>
+          <div class="text-slate-400 mt-2">יותר פגישות לאותו מספר לידים</div>
+        </div>
+        <div class="card-dark rounded-2xl p-8">
+          <div class="stat-number">&lt;2min</div>
+          <div class="text-slate-400 mt-2">זמן מגע ממוצע מרגע הכניסה</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- USE CASES -->
+  <section class="py-24 bg-slate-900/40">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl md:text-5xl font-extrabold mb-4">
+          איפה זה עובד הכי טוב
+        </h2>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="card-dark rounded-2xl p-7">
+          <div class="text-3xl mb-4">📤</div>
+          <h3 class="text-xl font-bold mb-3">Outbound Campaigns</h3>
+          <p class="text-slate-400 leading-relaxed">
+            יש לך רשימה של 500 חברות שרוצה לגעת בהן? KompanionAI מנהלת את כל השיחות הראשוניות ומחזירה לך רק את מי שרוצה להמשיך.
+          </p>
+        </div>
+
+        <div class="card-dark rounded-2xl p-7">
+          <div class="text-3xl mb-4">🔄</div>
+          <h3 class="text-xl font-bold mb-3">Follow-up אוטומטי</h3>
+          <p class="text-slate-400 leading-relaxed">
+            לידים שלא ענו? הצעות מחיר שנשלחו ונעלמו? המערכת חוזרת אליהם בתזמון נכון, בלי שתצטרך לזכור.
+          </p>
+        </div>
+
+        <div class="card-dark rounded-2xl p-7">
+          <div class="text-3xl mb-4">🔥</div>
+          <h3 class="text-xl font-bold mb-3">החזרת לידים ישנים</h3>
+          <p class="text-slate-400 leading-relaxed">
+            בסיס הנתונים שלך מלא בלידים שסגרת לפני שנה? אלה אחד המקורות הכי כדאיים שיש. KompanionAI מפעילה אותם מחדש.
+          </p>
+        </div>
+
+        <div class="card-dark rounded-2xl p-7">
+          <div class="text-3xl mb-4">📅</div>
+          <h3 class="text-xl font-bold mb-3">תיאום פגישות</h3>
+          <p class="text-slate-400 leading-relaxed">
+            שיחה שהסתיימה בעניין — מיד מתואמת פגישה ישירות ליומן. בלי הלוך-חזור, בלי בזבוז זמן.
+          </p>
+        </div>
+
+        <div class="card-dark rounded-2xl p-7">
+          <div class="text-3xl mb-4">🎯</div>
+          <h3 class="text-xl font-bold mb-3">סינון לפני Demo</h3>
+          <p class="text-slate-400 leading-relaxed">
+            לפני שה-AE שלך מבזבז שעה על Demo — KompanionAI בודקת תקציב, סמכות החלטה, ולוחות זמנים. רק מי שמתאים ממשיך.
+          </p>
+        </div>
+
+        <div class="card-dark rounded-2xl p-7">
+          <div class="text-3xl mb-4">🌍</div>
+          <h3 class="text-xl font-bold mb-3">שווקים מרובים</h3>
+          <p class="text-slate-400 leading-relaxed">
+            פועלים בכמה שווקים במקביל? המערכת מנהלת שיחות בכמה שפות, לפי לוחות זמנים שונים, בלי להוסיף headcount.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUOTE / TRUST -->
+  <section class="py-24 bg-slate-950">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <div class="card-dark rounded-3xl p-12">
+        <div class="text-5xl mb-6">💬</div>
+        <blockquote class="text-2xl md:text-3xl font-semibold leading-relaxed mb-8 text-slate-100">
+          "הצוות שלי עכשיו עוסק רק בשיחות שיש להן סיכוי אמיתי. הכל השאר — KompanionAI מטפלת."
+        </blockquote>
+        <div class="text-slate-400">
+          <div class="font-semibold text-white">מנהל מכירות, חברת SaaS B2B</div>
+          <div class="text-sm mt-1">פיילוט של 60 יום, 1,200 שיחות, 3× יותר פגישות</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="contact" class="py-24 bg-gradient-to-b from-slate-900 to-indigo-950/40">
+    <div class="max-w-3xl mx-auto px-6 text-center">
+      <h2 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
+        מוכן לראות כמה<br/>
+        <span class="accent">לידים מפספסים אותך</span><br/>
+        כרגע?
+      </h2>
+      <p class="text-slate-400 text-xl mb-10 leading-relaxed">
+        נשמח לעבור יחד על הפאנל הנוכחי שלך, להראות איפה נופלים לידים, ולתת לך הצעה ספציפית לעסק שלך.
+        בלי מצגות. בלי בולשיט. רק מה שרלוונטי.
+      </p>
+
+      <form class="max-w-md mx-auto space-y-4" onsubmit="handleSubmit(event)">
+        <input
+          type="text"
+          placeholder="שם מלא"
+          class="w-full bg-slate-800/60 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-all text-right"
+          required
+        />
+        <input
+          type="email"
+          placeholder="אימייל עסקי"
+          class="w-full bg-slate-800/60 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-all text-right"
+          required
+        />
+        <input
+          type="text"
+          placeholder="שם החברה"
+          class="w-full bg-slate-800/60 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-all text-right"
+          required
+        />
+        <select
+          class="w-full bg-slate-800/60 border border-white/10 rounded-xl px-5 py-4 text-slate-400 focus:outline-none focus:border-indigo-500 transition-all text-right"
+        >
+          <option value="">כמה SDRים יש לך כרגע?</option>
+          <option>1–2</option>
+          <option>3–5</option>
+          <option>6–10</option>
+          <option>10+</option>
+          <option>אין SDRים עדיין</option>
+        </select>
+        <button type="submit" class="cta-btn w-full text-white font-bold py-4 rounded-xl text-lg">
+          רוצה לדעת כמה פגישות אני מפספס →
+        </button>
+        <p class="text-slate-500 text-sm">ללא התחייבות. נחזור אליך תוך יום עסקים אחד.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="py-10 border-t border-white/5 bg-slate-950">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4 text-slate-500 text-sm">
+      <span class="text-white font-bold text-lg">Kompanion<span class="accent">AI</span></span>
+      <span>© 2026 KompanionAI · כל הזכויות שמורות</span>
+      <div class="flex gap-6">
+        <a href="#" class="hover:text-white transition-colors">פרטיות</a>
+        <a href="#" class="hover:text-white transition-colors">תנאי שימוש</a>
+        <a href="#contact" class="hover:text-white transition-colors">צור קשר</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function handleSubmit(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type=submit]');
+      btn.textContent = 'נשלח! ניצור קשר בקרוב ✓';
+      btn.disabled = true;
+      btn.style.opacity = '0.7';
+    }
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  </script>
+</body>
+</html>
