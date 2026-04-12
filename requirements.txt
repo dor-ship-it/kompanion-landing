@@ -1,0 +1,8 @@
+flask
+flask-cors
+anthropic
+weasyprint
+python-docx
+python-pptx
+pdf2image
+python-dotenv
