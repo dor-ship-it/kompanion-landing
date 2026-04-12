@@ -3,388 +3,526 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KompanionAI – שיחות מכירה שעובדות בשבילך</title>
+  <title>KompanionAI – מחולל מסמכים</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap');
-    body { font-family: 'Assistant', sans-serif; }
-    .gradient-hero {
-      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Assistant:wght@400;600;700;800&display=swap');
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Assistant', sans-serif;
+      background: #13100A;
+      color: #F0EAD6;
+      min-height: 100vh;
     }
-    .accent { color: #818cf8; }
-    .accent-bg { background-color: #818cf8; }
-    .accent-border { border-color: #818cf8; }
-    .card-dark {
+
+    :root {
+      --yellow:      #F5C400;
+      --orange:      #F5A51D;
+      --coral:       #FA7C6E;
+      --dark:        #13100A;
+      --card:        #1C1810;
+      --border:      rgba(245,196,0,0.12);
+      --border-focus:rgba(245,196,0,0.5);
+      --muted:       #7A6E58;
+    }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-thumb { background: rgba(245,196,0,0.2); border-radius: 3px; }
+
+    /* ── Header ── */
+    .site-header {
+      background: rgba(19,16,10,0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── Logo font ── */
+    .logo-text { font-family: 'Nunito', sans-serif; font-weight: 800; }
+
+    /* ── Card ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+    }
+    .card-glow { box-shadow: 0 0 48px rgba(245,196,0,0.06); }
+
+    /* ── Textarea ── */
+    textarea {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: #F0EAD6;
+      font-family: 'Assistant', sans-serif;
+      font-size: 1rem;
+      line-height: 1.7;
+      resize: vertical;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      width: 100%;
+      outline: none;
+    }
+    textarea:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(245,196,0,0.1);
+    }
+    textarea::placeholder { color: rgba(120,110,88,0.7); }
+
+    /* ── Chips ── */
+    .chip-group { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+    .chip {
       background: rgba(255,255,255,0.04);
       border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 0.83rem;
+      font-weight: 700;
+      padding: 0.32rem 0.8rem;
+      transition: all 0.15s;
+      user-select: none;
     }
-    .stat-number {
-      font-size: 3rem;
-      font-weight: 800;
-      background: linear-gradient(90deg, #818cf8, #c4b5fd);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    .chip:hover { border-color: var(--yellow); color: var(--yellow); }
+    .chip.active {
+      background: rgba(245,196,0,0.14);
+      border-color: var(--yellow);
+      color: var(--yellow);
     }
-    .step-number {
-      width: 2.5rem;
-      height: 2.5rem;
-      background: linear-gradient(135deg, #818cf8, #6366f1);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
+
+    /* ── Generate button ── */
+    .btn-generate {
+      background: var(--orange);
+      color: #13100A;
+      font-family: 'Nunito', 'Assistant', sans-serif;
       font-size: 1rem;
-      color: white;
+      font-weight: 900;
+      border: none;
+      border-radius: 50px;
+      padding: 0.72rem 2.2rem;
+      cursor: pointer;
+      transition: transform 0.18s, box-shadow 0.18s;
+      white-space: nowrap;
+    }
+    .btn-generate:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(245,165,29,0.4);
+    }
+    .btn-generate:active { transform: translateY(0); }
+    .btn-generate:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn-generate .btn-loader {
+      display: none;
+      width: 17px; height: 17px;
+      border: 2px solid rgba(19,16,10,0.3);
+      border-top-color: #13100A;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto;
+    }
+    .btn-generate.loading .btn-text { display: none; }
+    .btn-generate.loading .btn-loader { display: block; }
+
+    /* ── Toggle ── */
+    .toggle-track {
+      width: 36px; height: 20px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50px;
+      position: relative;
+      transition: background 0.2s;
+      cursor: pointer;
       flex-shrink: 0;
     }
-    .cta-btn {
-      background: linear-gradient(135deg, #6366f1, #818cf8);
-      transition: all 0.2s ease;
+    .toggle-track.on { background: var(--yellow); }
+    .toggle-thumb {
+      position: absolute;
+      top: 2px;
+      width: 16px; height: 16px;
+      background: white;
+      border-radius: 50%;
+      transition: left 0.2s, right 0.2s;
     }
-    .cta-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(99,102,241,0.4);
-    }
-    .pain-item::before {
-      content: '✗';
-      color: #f87171;
+    /* RTL: right side = ON */
+    .toggle-track.on  .toggle-thumb { right: 2px; left: auto; }
+    .toggle-track.off .toggle-thumb { left: 2px; right: auto; }
+
+    /* ── Section label ── */
+    .section-label {
+      color: var(--muted);
+      font-size: 0.72rem;
       font-weight: 800;
-      margin-left: 0.5rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.55rem;
     }
-    .check-item::before {
-      content: '✓';
-      color: #818cf8;
-      font-weight: 800;
-      margin-left: 0.5rem;
+
+    /* ── Divider ── */
+    hr.divider { border: none; border-top: 1px solid var(--border); margin: 1.3rem 0; }
+
+    /* ── Output ── */
+    .output-section { display: none; animation: fadeUp 0.3s ease; }
+    .output-section.visible { display: block; }
+
+    pre.prompt-output {
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(245,196,0,0.1);
+      border-radius: 10px;
+      color: #C8B87A;
+      font-family: 'Courier New', monospace;
+      font-size: 0.8rem;
+      line-height: 1.6;
+      padding: 1.1rem 1.3rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+
+    /* ── Copy btn ── */
+    .btn-copy {
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 0.83rem;
+      font-weight: 700;
+      padding: 0.35rem 0.95rem;
+      transition: all 0.15s;
+    }
+    .btn-copy:hover { border-color: var(--yellow); color: var(--yellow); }
+    .btn-copy.copied { border-color: #6ee7b7; color: #6ee7b7; }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      bottom: 1.5rem; left: 50%;
+      transform: translateX(-50%) translateY(60px);
+      background: #2A2318;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.65rem 1.3rem;
+      font-size: 0.85rem; font-weight: 700;
+      color: var(--yellow);
+      transition: transform 0.28s ease;
+      z-index: 999;
+      pointer-events: none;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── Yellow highlight text (like "superpowered") ── */
+    .highlight { color: var(--yellow); }
+    .highlight-coral { color: var(--coral); }
+
+    /* ── Animations ── */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .controls-row { flex-direction: column; }
+      .btn-generate { width: 100%; text-align: center; }
     }
   </style>
 </head>
-<body class="bg-slate-950 text-white">
+<body>
 
-  <!-- NAV -->
-  <nav class="fixed top-0 w-full z-50 bg-slate-950/90 backdrop-blur border-b border-white/5">
-    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-      <span class="text-xl font-bold tracking-tight">Kompanion<span class="accent">AI</span></span>
-      <a href="#contact" class="cta-btn text-white text-sm font-semibold px-5 py-2.5 rounded-lg">
-        רוצה לדעת יותר?
-      </a>
-    </div>
-  </nav>
+  <!-- ─── HEADER ─── -->
+  <header class="site-header sticky top-0 z-50">
+    <div class="max-w-3xl mx-auto px-5 py-3 flex items-center justify-between">
 
-  <!-- HERO -->
-  <section class="gradient-hero min-h-screen flex items-center pt-24 pb-20">
-    <div class="max-w-5xl mx-auto px-6 text-center">
-      <div class="inline-block bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-sm font-medium px-4 py-1.5 rounded-full mb-8">
-        Voice AI לצוותי מכירות B2B
+      <!-- Logo -->
+      <div class="flex items-center gap-2.5">
+        <!-- K icon -->
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="32" height="32" rx="7" fill="#F5C400"/>
+          <path d="M9 7h4v6.5l5-6.5h4.5L16 15.5 23 25h-4.5L13 18l-0 1v6H9V7z" fill="white"/>
+        </svg>
+        <span class="logo-text text-lg text-white">KompanionAI</span>
+        <span style="color:var(--muted)" class="text-sm font-normal hidden sm:inline">/ מחולל מסמכים</span>
       </div>
 
-      <h1 class="text-5xl md:text-7xl font-extrabold leading-tight mb-6 tracking-tight">
-        שיחות מכירה<br/>
-        <span class="accent">בלי אנשי מכירות.</span>
+      <span class="text-xs border rounded-full px-3 py-1" style="color:var(--muted);border-color:var(--border)">
+        שימוש פנימי
+      </span>
+    </div>
+  </header>
+
+  <!-- ─── MAIN ─── -->
+  <main class="max-w-3xl mx-auto px-5 py-10 space-y-5">
+
+    <!-- Title -->
+    <div class="text-center mb-6">
+      <h1 class="text-2xl font-bold mb-1.5">
+        מה תרצה <span class="highlight">ליצור</span> היום?
       </h1>
-
-      <p class="text-slate-300 text-xl md:text-2xl max-w-2xl mx-auto mb-10 leading-relaxed">
-        KompanionAI מבצעת שיחות טלפון ראשוניות בשמך —<br/>
-        מסננת לידים, מנהלת שיחות פתיחה, ומעבירה לצוות שלך רק את מי ששווה את הזמן.
-      </p>
-
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="#contact" class="cta-btn text-white font-bold px-8 py-4 rounded-xl text-lg">
-          בוא נדבר על הפיילוט שלך
-        </a>
-        <a href="#how" class="border border-white/20 hover:border-white/40 text-white font-semibold px-8 py-4 rounded-xl text-lg transition-all">
-          איך זה עובד?
-        </a>
-      </div>
-
-      <div class="mt-16 grid grid-cols-3 gap-6 max-w-xl mx-auto text-center">
-        <div>
-          <div class="stat-number">×4</div>
-          <div class="text-slate-400 text-sm mt-1">יותר שיחות רלוונטיות</div>
-        </div>
-        <div>
-          <div class="stat-number">70%</div>
-          <div class="text-slate-400 text-sm mt-1">פחות זמן מבוזבז</div>
-        </div>
-        <div>
-          <div class="stat-number">24/7</div>
-          <div class="text-slate-400 text-sm mt-1">ללא הפסקה</div>
-        </div>
-      </div>
+      <p class="text-sm" style="color:var(--muted)">תאר את המסמך – סגנון, תוכן, מטרה – ותקבל פרומפט ממותג מוכן</p>
     </div>
-  </section>
 
-  <!-- PROBLEM -->
-  <section class="py-24 bg-slate-950">
-    <div class="max-w-5xl mx-auto px-6">
-      <div class="text-center mb-16">
-        <h2 class="text-4xl md:text-5xl font-extrabold mb-4">
-          הבעיה האמיתית של כל צוות מכירות
-        </h2>
-        <p class="text-slate-400 text-lg max-w-xl mx-auto">
-          לא חסרות לידים. חסר זמן לעסוק בכולם כמו שצריך.
-        </p>
-      </div>
+    <!-- ─── MAIN CARD ─── -->
+    <div class="card card-glow p-5 space-y-5">
 
-      <div class="grid md:grid-cols-2 gap-8">
-        <div class="card-dark rounded-2xl p-8">
-          <h3 class="text-2xl font-bold mb-6 text-red-400">מה קורה בפועל</h3>
-          <ul class="space-y-4 text-slate-300 text-lg">
-            <li class="pain-item">70% מהשיחות של SDR מסתיימות בלי תגובה</li>
-            <li class="pain-item">אנשי המכירות שלך מבלים שעות על לידים קרים</li>
-            <li class="pain-item">Follow-up מתאחר — הליד כבר שכח אותך</li>
-            <li class="pain-item">לידים טובים נופלים בין הכיסאות כי אין כוח אדם</li>
-            <li class="pain-item">SDR חדש לוקח 3–6 חודשים להגיע לביצועים</li>
-          </ul>
-        </div>
-
-        <div class="card-dark rounded-2xl p-8">
-          <h3 class="text-2xl font-bold mb-6 accent">מה KompanionAI עושה</h3>
-          <ul class="space-y-4 text-slate-300 text-lg">
-            <li class="check-item">מתקשרת לכל ליד תוך דקות מרגע שנכנס</li>
-            <li class="check-item">מנהלת שיחה אמיתית, מקצועית, בשפה טבעית</li>
-            <li class="check-item">מסננת ומבינה מי רלוונטי ומי לא</li>
-            <li class="check-item">מתאמת פגישות ישירות ליומן הצוות</li>
-            <li class="check-item">מעבירה לך רק לידים חמים עם תמצית השיחה</li>
-          </ul>
+      <!-- Prompt -->
+      <div>
+        <div class="section-label">תיאור המסמך</div>
+        <textarea id="promptInput" rows="7"
+          placeholder="לדוגמה: צור הצעת מחיר ללקוח עם לוגו KompanionAI, פלטת הצבעים הצהובה-כהה, שני עמודים, מחירים + טבלת שירותים. סגנון מקצועי ונקי."
+          class="p-4"></textarea>
+        <div class="text-left mt-1.5">
+          <span class="text-xs" style="color:var(--muted)">Ctrl+Enter לשליחה מהירה</span>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- HOW IT WORKS -->
-  <section id="how" class="py-24 bg-slate-900/40">
-    <div class="max-w-4xl mx-auto px-6">
-      <div class="text-center mb-16">
-        <h2 class="text-4xl md:text-5xl font-extrabold mb-4">
-          שלושה שלבים. זהו.
-        </h2>
-        <p class="text-slate-400 text-lg">
-          ההגדרה לוקחת שעות. הפעלה — דקות.
-        </p>
-      </div>
+      <hr class="divider" />
 
-      <div class="space-y-8">
-        <div class="card-dark rounded-2xl p-8 flex gap-6 items-start">
-          <div class="step-number">1</div>
-          <div>
-            <h3 class="text-2xl font-bold mb-2">מגדירים את הפרופיל שלך</h3>
-            <p class="text-slate-400 text-lg leading-relaxed">
-              מי הלקוח האידיאלי שלך, מה השאלות שחשוב לשאול, מה הטון המתאים — KompanionAI מתאימה את עצמה לעסק שלך, לא להיפך.
-            </p>
-          </div>
-        </div>
-
-        <div class="card-dark rounded-2xl p-8 flex gap-6 items-start">
-          <div class="step-number">2</div>
-          <div>
-            <h3 class="text-2xl font-bold mb-2">המערכת מתקשרת — אתה לא עושה כלום</h3>
-            <p class="text-slate-400 text-lg leading-relaxed">
-              ברגע שליד נכנס, KompanionAI מתקשרת אוטומטית. מנהלת שיחה, שואלת, מקשיבה, ומבינה מי באמת מעוניין. בשעות שאתה בפגישה. בלילה. בסוף שבוע.
-            </p>
-          </div>
-        </div>
-
-        <div class="card-dark rounded-2xl p-8 flex gap-6 items-start">
-          <div class="step-number">3</div>
-          <div>
-            <h3 class="text-2xl font-bold mb-2">אתה מקבל רק את הלידים שמגיעים לך</h3>
-            <p class="text-slate-400 text-lg leading-relaxed">
-              כל ליד שעבר סינון מגיע אליך עם תמצית השיחה, רמת העניין, והמלצה לשלב הבא. פגישות שמתואמות — כבר ביומן. שאר הלידים — מנוהלים אוטומטית.
-            </p>
-          </div>
+      <!-- Doc type -->
+      <div>
+        <div class="section-label">סוג קובץ</div>
+        <div class="chip-group" id="docTypeGroup">
+          <span class="chip active" data-value="pdf">📄 PDF</span>
+          <span class="chip" data-value="word">📝 Word</span>
+          <span class="chip" data-value="powerpoint">📊 PowerPoint</span>
+          <span class="chip" data-value="canva">🎨 Canva</span>
+          <span class="chip" data-value="png">🖼 PNG</span>
+          <span class="chip" data-value="presentation">✨ מצגת ויב</span>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- STATS -->
-  <section class="py-24 bg-slate-950">
-    <div class="max-w-5xl mx-auto px-6 text-center">
-      <h2 class="text-4xl md:text-5xl font-extrabold mb-4">
-        מספרים שמדברים בפני עצמם
-      </h2>
-      <p class="text-slate-400 text-lg mb-16">על בסיס אלפי שיחות שביצענו עד היום</p>
-
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-        <div class="card-dark rounded-2xl p-8">
-          <div class="stat-number">5,000+</div>
-          <div class="text-slate-400 mt-2">שיחות בוצעו</div>
-        </div>
-        <div class="card-dark rounded-2xl p-8">
-          <div class="stat-number">68%</div>
-          <div class="text-slate-400 mt-2">אחוז שיחות שהסתיימו בסינון מוצלח</div>
-        </div>
-        <div class="card-dark rounded-2xl p-8">
-          <div class="stat-number">3×</div>
-          <div class="text-slate-400 mt-2">יותר פגישות לאותו מספר לידים</div>
-        </div>
-        <div class="card-dark rounded-2xl p-8">
-          <div class="stat-number">&lt;2min</div>
-          <div class="text-slate-400 mt-2">זמן מגע ממוצע מרגע הכניסה</div>
+      <!-- Resolution -->
+      <div>
+        <div class="section-label">פורמט / רזולוציה</div>
+        <div class="chip-group" id="resolutionGroup">
+          <span class="chip active" data-value="A4">A4</span>
+          <span class="chip" data-value="A3">A3</span>
+          <span class="chip" data-value="Letter">Letter</span>
+          <span class="chip" data-value="1:1">1:1</span>
+          <span class="chip" data-value="16:9">16:9</span>
+          <span class="chip" data-value="9:16">9:16</span>
+          <span class="chip" data-value="4:3">4:3</span>
+          <span class="chip" data-value="6:9">6:9</span>
+          <span class="chip" data-value="9:6">9:6</span>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- USE CASES -->
-  <section class="py-24 bg-slate-900/40">
-    <div class="max-w-5xl mx-auto px-6">
-      <div class="text-center mb-16">
-        <h2 class="text-4xl md:text-5xl font-extrabold mb-4">
-          איפה זה עובד הכי טוב
-        </h2>
-      </div>
+      <hr class="divider" />
 
-      <div class="grid md:grid-cols-3 gap-6">
-        <div class="card-dark rounded-2xl p-7">
-          <div class="text-3xl mb-4">📤</div>
-          <h3 class="text-xl font-bold mb-3">Outbound Campaigns</h3>
-          <p class="text-slate-400 leading-relaxed">
-            יש לך רשימה של 500 חברות שרוצה לגעת בהן? KompanionAI מנהלת את כל השיחות הראשוניות ומחזירה לך רק את מי שרוצה להמשיך.
-          </p>
+      <!-- Controls -->
+      <div class="controls-row flex items-center justify-between gap-3">
+
+        <!-- Toggles -->
+        <div class="flex items-center gap-4 flex-wrap">
+          <label class="flex items-center gap-2 cursor-pointer select-none text-sm" style="color:var(--muted)" onclick="toggleSwitch('brandedToggle')">
+            <div class="toggle-track on" id="brandedToggle" data-state="on">
+              <div class="toggle-thumb"></div>
+            </div>
+            ממותג
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer select-none text-sm" style="color:var(--muted)" onclick="toggleSwitch('hebrewToggle')">
+            <div class="toggle-track on" id="hebrewToggle" data-state="on">
+              <div class="toggle-thumb"></div>
+            </div>
+            עברית
+          </label>
         </div>
 
-        <div class="card-dark rounded-2xl p-7">
-          <div class="text-3xl mb-4">🔄</div>
-          <h3 class="text-xl font-bold mb-3">Follow-up אוטומטי</h3>
-          <p class="text-slate-400 leading-relaxed">
-            לידים שלא ענו? הצעות מחיר שנשלחו ונעלמו? המערכת חוזרת אליהם בתזמון נכון, בלי שתצטרך לזכור.
-          </p>
-        </div>
-
-        <div class="card-dark rounded-2xl p-7">
-          <div class="text-3xl mb-4">🔥</div>
-          <h3 class="text-xl font-bold mb-3">החזרת לידים ישנים</h3>
-          <p class="text-slate-400 leading-relaxed">
-            בסיס הנתונים שלך מלא בלידים שסגרת לפני שנה? אלה אחד המקורות הכי כדאיים שיש. KompanionAI מפעילה אותם מחדש.
-          </p>
-        </div>
-
-        <div class="card-dark rounded-2xl p-7">
-          <div class="text-3xl mb-4">📅</div>
-          <h3 class="text-xl font-bold mb-3">תיאום פגישות</h3>
-          <p class="text-slate-400 leading-relaxed">
-            שיחה שהסתיימה בעניין — מיד מתואמת פגישה ישירות ליומן. בלי הלוך-חזור, בלי בזבוז זמן.
-          </p>
-        </div>
-
-        <div class="card-dark rounded-2xl p-7">
-          <div class="text-3xl mb-4">🎯</div>
-          <h3 class="text-xl font-bold mb-3">סינון לפני Demo</h3>
-          <p class="text-slate-400 leading-relaxed">
-            לפני שה-AE שלך מבזבז שעה על Demo — KompanionAI בודקת תקציב, סמכות החלטה, ולוחות זמנים. רק מי שמתאים ממשיך.
-          </p>
-        </div>
-
-        <div class="card-dark rounded-2xl p-7">
-          <div class="text-3xl mb-4">🌍</div>
-          <h3 class="text-xl font-bold mb-3">שווקים מרובים</h3>
-          <p class="text-slate-400 leading-relaxed">
-            פועלים בכמה שווקים במקביל? המערכת מנהלת שיחות בכמה שפות, לפי לוחות זמנים שונים, בלי להוסיף headcount.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- QUOTE / TRUST -->
-  <section class="py-24 bg-slate-950">
-    <div class="max-w-4xl mx-auto px-6 text-center">
-      <div class="card-dark rounded-3xl p-12">
-        <div class="text-5xl mb-6">💬</div>
-        <blockquote class="text-2xl md:text-3xl font-semibold leading-relaxed mb-8 text-slate-100">
-          "הצוות שלי עכשיו עוסק רק בשיחות שיש להן סיכוי אמיתי. הכל השאר — KompanionAI מטפלת."
-        </blockquote>
-        <div class="text-slate-400">
-          <div class="font-semibold text-white">מנהל מכירות, חברת SaaS B2B</div>
-          <div class="text-sm mt-1">פיילוט של 60 יום, 1,200 שיחות, 3× יותר פגישות</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <section id="contact" class="py-24 bg-gradient-to-b from-slate-900 to-indigo-950/40">
-    <div class="max-w-3xl mx-auto px-6 text-center">
-      <h2 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
-        מוכן לראות כמה<br/>
-        <span class="accent">לידים מפספסים אותך</span><br/>
-        כרגע?
-      </h2>
-      <p class="text-slate-400 text-xl mb-10 leading-relaxed">
-        נשמח לעבור יחד על הפאנל הנוכחי שלך, להראות איפה נופלים לידים, ולתת לך הצעה ספציפית לעסק שלך.
-        בלי מצגות. בלי בולשיט. רק מה שרלוונטי.
-      </p>
-
-      <form class="max-w-md mx-auto space-y-4" onsubmit="handleSubmit(event)">
-        <input
-          type="text"
-          placeholder="שם מלא"
-          class="w-full bg-slate-800/60 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-all text-right"
-          required
-        />
-        <input
-          type="email"
-          placeholder="אימייל עסקי"
-          class="w-full bg-slate-800/60 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-all text-right"
-          required
-        />
-        <input
-          type="text"
-          placeholder="שם החברה"
-          class="w-full bg-slate-800/60 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-all text-right"
-          required
-        />
-        <select
-          class="w-full bg-slate-800/60 border border-white/10 rounded-xl px-5 py-4 text-slate-400 focus:outline-none focus:border-indigo-500 transition-all text-right"
-        >
-          <option value="">כמה SDRים יש לך כרגע?</option>
-          <option>1–2</option>
-          <option>3–5</option>
-          <option>6–10</option>
-          <option>10+</option>
-          <option>אין SDRים עדיין</option>
-        </select>
-        <button type="submit" class="cta-btn w-full text-white font-bold py-4 rounded-xl text-lg">
-          רוצה לדעת כמה פגישות אני מפספס →
+        <!-- Button -->
+        <button class="btn-generate" id="generateBtn" onclick="handleGenerate()">
+          <span class="btn-text">⚡ Generate</span>
+          <span class="btn-loader"></span>
         </button>
-        <p class="text-slate-500 text-sm">ללא התחייבות. נחזור אליך תוך יום עסקים אחד.</p>
-      </form>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer class="py-10 border-t border-white/5 bg-slate-950">
-    <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4 text-slate-500 text-sm">
-      <span class="text-white font-bold text-lg">Kompanion<span class="accent">AI</span></span>
-      <span>© 2026 KompanionAI · כל הזכויות שמורות</span>
-      <div class="flex gap-6">
-        <a href="#" class="hover:text-white transition-colors">פרטיות</a>
-        <a href="#" class="hover:text-white transition-colors">תנאי שימוש</a>
-        <a href="#contact" class="hover:text-white transition-colors">צור קשר</a>
       </div>
     </div>
-  </footer>
+
+    <!-- ─── OUTPUT CARD ─── -->
+    <div class="card p-5 space-y-3 output-section" id="outputSection">
+      <div class="flex items-center justify-between">
+        <div class="text-sm font-bold" style="color:#C8B87A">הפרומפט שנוצר</div>
+        <button class="btn-copy" id="copyBtn" onclick="copyPrompt()">העתק</button>
+      </div>
+      <pre class="prompt-output" id="outputText"></pre>
+      <p class="text-xs text-center" style="color:var(--muted)">
+        העתק ושלח לכלי AI שלך ליצירת הקובץ הסופי
+      </p>
+    </div>
+
+  </main>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
 
   <script>
-    function handleSubmit(e) {
-      e.preventDefault();
-      const btn = e.target.querySelector('button[type=submit]');
-      btn.textContent = 'נשלח! ניצור קשר בקרוב ✓';
-      btn.disabled = true;
-      btn.style.opacity = '0.7';
+    // ── Chip single-select ──
+    document.querySelectorAll('.chip-group').forEach(group => {
+      group.querySelectorAll('.chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          group.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+        });
+      });
+    });
+
+    // ── Toggle ──
+    function toggleSwitch(id) {
+      const el = document.getElementById(id);
+      const on = el.dataset.state === 'on';
+      el.dataset.state = on ? 'off' : 'on';
+      el.classList.toggle('on',  !on);
+      el.classList.toggle('off',  on);
+    }
+    // init off state
+    document.querySelectorAll('.toggle-track').forEach(el => {
+      if (el.dataset.state !== 'on') { el.classList.remove('on'); el.classList.add('off'); }
+    });
+
+    function getToggle(id) { return document.getElementById(id).dataset.state === 'on'; }
+    function getActive(gid) {
+      const c = document.querySelector(`#${gid} .chip.active`);
+      return c ? c.dataset.value : '';
     }
 
-    // Smooth scroll
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
+    // ── Brand data ──
+    const BRAND = {
+      name:   'KompanionAI',
+      logo:   'ריבוע מעוגל צהוב (#F5C400) עם אות K לבנה + כיתוב "KompanionAI" בפונט מעוגל',
+      colors: {
+        primary:    '#F5C400',  // צהוב זהב – צבע ראשי
+        cta:        '#F5A51D',  // כתום – כפתורי CTA
+        coral:      '#FA7C6E',  // קורל – הדגשות
+        dark:       '#13100A',  // רקע כהה
+        darkCard:   '#1C1810',  // רקע כרטיסים
+        cream:      '#FEF9E7',  // רקע בהיר / קרם
+        textLight:  '#F0EAD6',  // טקסט בהיר
+        textMuted:  '#7A6E58',  // טקסט משני
+      },
+      fonts:   { heading: 'Nunito ExtraBold', body: 'Assistant' },
+      style:   'חם, נועז, מודרני, פינות מעוגלות, לא קורפורייטי',
+      tone:    'מקצועי ונגיש, ישיר, AI-first',
+      product: 'פלטפורמת מכירות AI – שיחות קוליות אוטומטיות, SDR וירטואלי, outbound/inbound/follow-up',
+    };
+
+    const DOC_LABELS = {
+      pdf:          'PDF מסמך',
+      word:         'מסמך Word (.docx)',
+      powerpoint:   'מצגת PowerPoint (.pptx)',
+      canva:        'עיצוב Canva',
+      png:          'תמונה PNG',
+      presentation: 'מצגת ויב / Wix Studio',
+    };
+
+    const RES_LABELS = {
+      'A4':     'A4 – 210×297mm (לאורך)',
+      'A3':     'A3 – 297×420mm',
+      'Letter': 'Letter – 8.5×11 אינץ׳',
+      '1:1':    '1:1 – קווארדטי 1080×1080 (רשתות חברתיות)',
+      '16:9':   '16:9 – מסך רחב 1920×1080',
+      '9:16':   '9:16 – סטורי אנכי 1080×1920',
+      '4:3':    '4:3 – מצגת קלאסית',
+      '6:9':    '6:9 – אנכי מורחב',
+      '9:6':    '9:6 – אופקי מותאם',
+    };
+
+    function buildPrompt({ userDesc, docType, resolution, branded, hebrew }) {
+      const docLabel = DOC_LABELS[docType] || docType;
+      const resLabel = RES_LABELS[resolution] || resolution;
+      const lang     = hebrew ? 'עברית (RTL, מימין לשמאל)' : 'אנגלית';
+
+      const brandBlock = branded ? `
+## מיתוג KompanionAI
+- שם המותג: ${BRAND.name}
+- לוגו: ${BRAND.logo}
+- צבע ראשי (Primary): ${BRAND.colors.primary} – צהוב זהב
+- צבע CTA: ${BRAND.colors.cta} – כתום
+- אקסנט: ${BRAND.colors.coral} – קורל/ורוד
+- רקע כהה: ${BRAND.colors.dark}
+- רקע בהיר/קרם: ${BRAND.colors.cream}
+- פונט כותרות: ${BRAND.fonts.heading}
+- פונט גוף: ${BRAND.fonts.body}
+- סגנון עיצובי: ${BRAND.style}
+- טון: ${BRAND.tone}
+- על המוצר: ${BRAND.product}
+- יש לשמור על עקביות מלאה עם זהות הברנד בכל אלמנט ויזואלי` : '';
+
+      return `# בקשה ליצירת מסמך מעוצב
+
+## סוג הפלט
+${docLabel}
+
+## פורמט ורזולוציה
+${resLabel}
+
+## שפה
+${lang}
+${brandBlock}
+
+## תיאור המסמך
+${userDesc.trim()}
+
+## הנחיות עיצוב
+- עיצוב נקי, מודרני ומקצועי
+- שימוש עקבי בפלטת הצבעים
+- היררכיה ברורה: כותרות → תת-כותרות → גוף
+- רווחים נדיבים, פינות מעוגלות
+- אם מצגת – מסר אחד ברור לכל שקף
+
+## הנחיות טכניות
+- פורמט פלט: ${docLabel}
+- רזולוציה / גודל: ${resLabel}
+- כל אלמנטים בתוך גבולות הקובץ
+- פונטים מוטמעים / זמינים לווב`;
+    }
+
+    function handleGenerate() {
+      const userDesc = document.getElementById('promptInput').value.trim();
+      if (!userDesc) {
+        showToast('נא לכתוב תיאור של המסמך');
+        document.getElementById('promptInput').focus();
+        return;
+      }
+      const btn = document.getElementById('generateBtn');
+      btn.classList.add('loading'); btn.disabled = true;
+
+      setTimeout(() => {
+        const prompt = buildPrompt({
+          userDesc,
+          docType:    getActive('docTypeGroup'),
+          resolution: getActive('resolutionGroup'),
+          branded:    getToggle('brandedToggle'),
+          hebrew:     getToggle('hebrewToggle'),
+        });
+
+        document.getElementById('outputText').textContent = prompt;
+        const out = document.getElementById('outputSection');
+        out.classList.add('visible');
+        out.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+        btn.classList.remove('loading'); btn.disabled = false;
+        showToast('הפרומפט מוכן ✓');
+      }, 800);
+    }
+
+    function copyPrompt() {
+      const text = document.getElementById('outputText').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('copyBtn');
+        btn.textContent = '✓ הועתק';
+        btn.classList.add('copied');
+        showToast('הועתק ללוח!');
+        setTimeout(() => { btn.textContent = 'העתק'; btn.classList.remove('copied'); }, 2000);
+      }).catch(() => showToast('בחר ידנית – CTRL+A'));
+    }
+
+    let toastTimer;
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+    }
+
+    document.getElementById('promptInput').addEventListener('keydown', e => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') handleGenerate();
     });
   </script>
 </body>
