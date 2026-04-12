@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Assistant', 'Arial', sans-serif;
+      background: #0f172a;
+      color: #ffffff;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      padding: 40px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* HEADER */
+    .header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+      border-radius: 20px;
+      padding: 40px;
+      margin-bottom: 24px;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 28px;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-accent { color: #818cf8; }
+
+    .badge {
+      display: inline-block;
+      background: rgba(99,102,241,0.15);
+      border: 1px solid rgba(99,102,241,0.25);
+      color: #a5b4fc;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 100px;
+      margin-left: 12px;
+      vertical-align: middle;
+    }
+
+    .header-date {
+      text-align: right;
+      color: #94a3b8;
+      font-size: 13px;
+    }
+
+    .header-date strong {
+      display: block;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 15px;
+      margin-bottom: 2px;
+    }
+
+    .header h1 {
+      font-size: 38px;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      color: #cbd5e1;
+      font-size: 17px;
+    }
+
+    /* STATS ROW */
+    .stats-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 40px;
+      font-weight: 800;
+      background: linear-gradient(90deg, #818cf8, #c4b5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.1;
+    }
+
+    .stat-label {
+      color: #94a3b8;
+      margin-top: 6px;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    /* TWO COL */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 28px;
+    }
+
+    .card h2 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    /* OUTCOMES TABLE */
+    .outcome-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+    }
+
+    .outcome-row + .outcome-row {
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .outcome-label { color: #cbd5e1; }
+
+    .outcome-value {
+      font-weight: 700;
+      font-size: 17px;
+      color: #ffffff;
+    }
+
+    .outcome-value.accent { color: #818cf8; }
+    .outcome-value.muted { color: #64748b; }
+
+    /* SIGNALS */
+    .signal-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+
+    .dot-accent { background: #818cf8; }
+    .dot-red { background: #f87171; }
+
+    .signal-text { color: #cbd5e1; line-height: 1.5; }
+    .signal-text strong { color: #ffffff; }
+
+    /* COMPARISON TABLE */
+    .section-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+
+    .section-card h2 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    table thead tr {
+      background: rgba(99,102,241,0.15);
+    }
+
+    table th {
+      padding: 14px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #94a3b8;
+    }
+
+    table th:first-child { text-align: left; }
+    table th:not(:first-child) { text-align: center; }
+    table th:last-child { color: #ffffff; }
+
+    table td {
+      padding: 13px 20px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    table td:first-child { color: #cbd5e1; }
+    table td:not(:first-child) { text-align: center; color: #64748b; }
+    table td:last-child { color: #ffffff; font-weight: 600; }
+
+    table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+    .td-accent { color: #818cf8 !important; font-weight: 700 !important; }
+
+    /* TREND PILLS */
+    .trend-pills {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .trend-pill {
+      background: rgba(129,140,248,0.08);
+      border: 1px solid rgba(129,140,248,0.2);
+      color: #818cf8;
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .trend-pill .pill-value {
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .trend-pill .pill-label {
+      font-size: 11px;
+      margin-top: 4px;
+      opacity: 0.75;
+    }
+
+    /* CAMPAIGN COMPARISON */
+    .camp-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .camp-card {
+      border-radius: 12px;
+      padding: 22px;
+    }
+
+    .camp-base {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .camp-best {
+      background: rgba(99,102,241,0.08);
+      border: 1px solid rgba(99,102,241,0.2);
+    }
+
+    .camp-tag {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 4px;
+    }
+
+    .camp-base .camp-tag { color: #475569; }
+    .camp-best .camp-tag { color: #818cf8; }
+
+    .camp-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 16px;
+    }
+
+    .camp-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 7px 0;
+      font-size: 13px;
+    }
+
+    .camp-row + .camp-row { border-top: 1px solid rgba(255,255,255,0.05); }
+    .camp-base .camp-row.divider { border-top: 1px solid rgba(255,255,255,0.1); }
+    .camp-best .camp-row.divider { border-top: 1px solid rgba(99,102,241,0.2); }
+
+    .camp-row span:first-child { color: #64748b; }
+    .camp-row span:last-child { font-weight: 600; color: #ffffff; }
+    .camp-row span.accent { color: #818cf8; font-weight: 700; }
+
+    .takeaway {
+      margin-top: 16px;
+      font-size: 13px;
+      color: #cbd5e1;
+      background: rgba(99,102,241,0.05);
+      border: 1px solid rgba(99,102,241,0.1);
+      border-radius: 10px;
+      padding: 14px 16px;
+      line-height: 1.6;
+    }
+
+    .takeaway strong { color: #ffffff; }
+
+    /* INSIGHT */
+    .insight-card {
+      background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+      border: 1px solid rgba(129,140,248,0.2);
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+
+    .insight-card h2 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .insight-subtitle {
+      color: #a5b4fc;
+      font-size: 13px;
+      margin-bottom: 22px;
+    }
+
+    .friction-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #475569;
+      margin-bottom: 12px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* DIRECTION */
+    .direction-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .direction-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .step-bubble {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #6366f1, #818cf8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .direction-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 3px;
+    }
+
+    .direction-sub {
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    /* FOOTER */
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding-top: 20px;
+      margin-top: 16px;
+      color: #475569;
+      font-size: 12px;
+    }
+
+    .footer-logo {
+      font-size: 15px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <span class="logo">Kompanion<span class="logo-accent">AI</span></span>
+        <span class="badge">Activity Report</span>
+      </div>
+      <div class="header-date">
+        <strong>Mar 30 – Apr 10, 2025</strong>
+        Last 10 Days Summary
+      </div>
+    </div>
+    <h1>Activity Summary</h1>
+    <p>Campaign performance overview — last 10 days of outbound activity</p>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-number">259</div>
+      <div class="stat-label">Total Dials</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">33</div>
+      <div class="stat-label">Calls Answered</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">12.7%</div>
+      <div class="stat-label">Connect Rate</div>
+    </div>
+  </div>
+
+  <!-- OUTCOMES + SIGNALS -->
+  <div class="two-col">
+    <div class="card">
+      <h2>Outcomes</h2>
+      <div class="outcome-row">
+        <span class="outcome-label">Follow-ups</span>
+        <span class="outcome-value">11</span>
+      </div>
+      <div class="outcome-row">
+        <span class="outcome-label">Meetings booked</span>
+        <span class="outcome-value accent">3</span>
+      </div>
+      <div class="outcome-row">
+        <span class="outcome-label">Not interested / not relevant</span>
+        <span class="outcome-value muted">3</span>
+      </div>
+      <div class="outcome-row">
+        <span class="outcome-label">AI-related objections</span>
+        <span class="outcome-value muted">4</span>
+      </div>
+      <div class="outcome-row">
+        <span class="outcome-label">Wrong numbers</span>
+        <span class="outcome-value muted">2</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Positive Signals</h2>
+      <div class="signal-item">
+        <div class="dot dot-accent"></div>
+        <div class="signal-text">Multiple <strong>high-quality conversations</strong> (5–10 min)</div>
+      </div>
+      <div class="signal-item">
+        <div class="dot dot-accent"></div>
+        <div class="signal-text"><strong>3 meetings booked</strong> — strong step forward vs. previous period</div>
+      </div>
+      <div class="signal-item">
+        <div class="dot dot-accent"></div>
+        <div class="signal-text">Clear improvement in <strong>conversation depth and engagement quality</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PERIOD COMPARISON -->
+  <div class="section-card">
+    <h2>Period Comparison</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>First 10 Days</th>
+          <th>Last 10 Days</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Dials</td>
+          <td>680</td>
+          <td>259</td>
+        </tr>
+        <tr>
+          <td>Answered</td>
+          <td>34</td>
+          <td>33</td>
+        </tr>
+        <tr>
+          <td>Connect Rate</td>
+          <td>~5.0%</td>
+          <td class="td-accent">~12.7% ↑</td>
+        </tr>
+        <tr>
+          <td>Follow-ups</td>
+          <td>8</td>
+          <td class="td-accent">11 ↑</td>
+        </tr>
+        <tr>
+          <td>Meetings</td>
+          <td>2</td>
+          <td class="td-accent">3 ↑</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="trend-pills">
+      <div class="trend-pill">
+        <div class="pill-value">5% → 12.7%</div>
+        <div class="pill-label">Connect Rate</div>
+      </div>
+      <div class="trend-pill">
+        <div class="pill-value">8 → 11</div>
+        <div class="pill-label">Follow-ups</div>
+      </div>
+      <div class="trend-pill">
+        <div class="pill-value">2 → 3</div>
+        <div class="pill-label">Meetings Booked</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAMPAIGN COMPARISON -->
+  <div class="section-card">
+    <h2>Campaign Comparison</h2>
+    <div class="camp-grid">
+
+      <div class="camp-card camp-base">
+        <div class="camp-tag">Campaign 1</div>
+        <div class="camp-title">KubeCon '23</div>
+        <div class="camp-row"><span>Total Dials</span><span>740</span></div>
+        <div class="camp-row"><span>Answered</span><span>39</span></div>
+        <div class="camp-row"><span>Follow-ups</span><span>11</span></div>
+        <div class="camp-row"><span>Meetings</span><span>2</span></div>
+        <div class="camp-row divider"><span>Connect Rate</span><span>~5.3%</span></div>
+      </div>
+
+      <div class="camp-card camp-best">
+        <div class="camp-tag">Campaign 2 · Best Performer</div>
+        <div class="camp-title">DevOps Live London – Cold Outbound</div>
+        <div class="camp-row"><span>Total Dials</span><span>199</span></div>
+        <div class="camp-row"><span>Answered</span><span>28</span></div>
+        <div class="camp-row"><span>Follow-ups</span><span>11</span></div>
+        <div class="camp-row"><span>Meetings</span><span class="accent">3</span></div>
+        <div class="camp-row divider"><span>Connect Rate</span><span class="accent">~14.1% ↑</span></div>
+      </div>
+    </div>
+
+    <div class="takeaway">
+      <strong>Takeaway:</strong> Campaign 2 delivers <strong>~3× higher connect rate</strong> and more meetings with significantly lower volume — strong indication of better audience relevance and timing.
+    </div>
+  </div>
+
+  <!-- KEY INSIGHT -->
+  <div class="insight-card">
+    <h2>Key Insight</h2>
+    <div class="insight-subtitle">Most important signal this period</div>
+
+    <div class="signal-item">
+      <div class="dot dot-accent"></div>
+      <div class="signal-text">Conversations are <strong>longer and more engaged</strong></div>
+    </div>
+    <div class="signal-item">
+      <div class="dot dot-accent"></div>
+      <div class="signal-text">Prospects are <strong>more willing to continue and book meetings</strong></div>
+    </div>
+    <div class="signal-item">
+      <div class="dot dot-accent"></div>
+      <div class="signal-text">The system is not just generating conversations — it is now generating <strong>pipeline signals (meetings)</strong></div>
+    </div>
+
+    <div class="friction-label">Friction Points to Address</div>
+    <div class="signal-item">
+      <div class="dot dot-red"></div>
+      <div class="signal-text">AI objection still exists as a friction point</div>
+    </div>
+    <div class="signal-item">
+      <div class="dot dot-red"></div>
+      <div class="signal-text">Some disconnects are directly tied to <strong>AI disclosure timing</strong></div>
+    </div>
+  </div>
+
+  <!-- DIRECTION FORWARD -->
+  <div class="section-card">
+    <h2>Direction Forward</h2>
+    <div class="direction-grid">
+      <div class="direction-item">
+        <div class="step-bubble">1</div>
+        <div>
+          <div class="direction-title">Scale volume on current campaign</div>
+          <div class="direction-sub">Continue scaling DevOps Live London outbound</div>
+        </div>
+      </div>
+      <div class="direction-item">
+        <div class="step-bubble">2</div>
+        <div>
+          <div class="direction-title">Refine AI disclosure handling</div>
+          <div class="direction-sub">Optimize timing and phrasing of AI disclosure</div>
+        </div>
+      </div>
+      <div class="direction-item">
+        <div class="step-bubble">3</div>
+        <div>
+          <div class="direction-title">Focus on decision-makers</div>
+          <div class="direction-sub">Keep optimizing for decision-maker conversations</div>
+        </div>
+      </div>
+      <div class="direction-item">
+        <div class="step-bubble">4</div>
+        <div>
+          <div class="direction-title">Maintain follow-up momentum</div>
+          <div class="direction-sub">Strong conversion already visible — keep pushing</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span class="footer-logo">Kompanion<span class="logo-accent">AI</span></span>
+    <span>Activity Report · Mar 30 – Apr 10, 2025</span>
+    <span>Confidential</span>
+  </div>
+
+</div>
+</body>
+</html>
