@@ -6,54 +6,55 @@
   <title>KompanionAI – מחולל מסמכים</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Assistant:wght@400;600;700;800&display=swap');
 
     * { box-sizing: border-box; }
+
     body {
       font-family: 'Assistant', sans-serif;
-      background: #0b0f1e;
-      color: #e2e8f0;
+      background: #13100A;
+      color: #F0EAD6;
       min-height: 100vh;
     }
 
-    /* ── Accent palette ── */
     :root {
-      --accent:       #818cf8;
-      --accent-deep:  #6366f1;
-      --accent-glow:  rgba(99,102,241,0.35);
-      --surface:      rgba(255,255,255,0.04);
-      --border:       rgba(255,255,255,0.08);
-      --border-focus: rgba(129,140,248,0.55);
+      --yellow:      #F5C400;
+      --orange:      #F5A51D;
+      --coral:       #FA7C6E;
+      --dark:        #13100A;
+      --card:        #1C1810;
+      --border:      rgba(245,196,0,0.12);
+      --border-focus:rgba(245,196,0,0.5);
+      --muted:       #7A6E58;
     }
 
-    /* ── Scrollbar ── */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-thumb { background: rgba(245,196,0,0.2); border-radius: 3px; }
 
     /* ── Header ── */
     .site-header {
-      background: rgba(11,15,30,0.85);
+      background: rgba(19,16,10,0.92);
       backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border);
     }
 
-    /* ── Card / glass ── */
+    /* ── Logo font ── */
+    .logo-text { font-family: 'Nunito', sans-serif; font-weight: 800; }
+
+    /* ── Card ── */
     .card {
-      background: var(--surface);
+      background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 16px;
+      border-radius: 18px;
     }
-    .card-glow {
-      box-shadow: 0 0 40px rgba(99,102,241,0.07);
-    }
+    .card-glow { box-shadow: 0 0 48px rgba(245,196,0,0.06); }
 
     /* ── Textarea ── */
     textarea {
       background: rgba(255,255,255,0.03);
       border: 1px solid var(--border);
       border-radius: 12px;
-      color: #e2e8f0;
+      color: #F0EAD6;
       font-family: 'Assistant', sans-serif;
       font-size: 1rem;
       line-height: 1.7;
@@ -64,65 +65,56 @@
     }
     textarea:focus {
       border-color: var(--border-focus);
-      box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+      box-shadow: 0 0 0 3px rgba(245,196,0,0.1);
     }
-    textarea::placeholder { color: rgba(148,163,184,0.45); }
+    textarea::placeholder { color: rgba(120,110,88,0.7); }
 
-    /* ── Select ── */
-    .styled-select {
-      appearance: none;
-      -webkit-appearance: none;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      color: #e2e8f0;
-      font-family: 'Assistant', sans-serif;
-      font-size: 0.92rem;
-      padding: 0.6rem 2.4rem 0.6rem 0.9rem;
+    /* ── Chips ── */
+    .chip-group { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+    .chip {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      color: var(--muted);
       cursor: pointer;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23818cf8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: left 0.75rem center;
+      font-size: 0.83rem;
+      font-weight: 700;
+      padding: 0.32rem 0.8rem;
+      transition: all 0.15s;
+      user-select: none;
     }
-    .styled-select:focus {
-      border-color: var(--border-focus);
-      box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+    .chip:hover { border-color: var(--yellow); color: var(--yellow); }
+    .chip.active {
+      background: rgba(245,196,0,0.14);
+      border-color: var(--yellow);
+      color: var(--yellow);
     }
-    .styled-select option { background: #1e293b; }
 
     /* ── Generate button ── */
     .btn-generate {
-      background: linear-gradient(135deg, #6366f1, #818cf8);
-      color: #fff;
-      font-family: 'Assistant', sans-serif;
-      font-size: 1.05rem;
-      font-weight: 700;
+      background: var(--orange);
+      color: #13100A;
+      font-family: 'Nunito', 'Assistant', sans-serif;
+      font-size: 1rem;
+      font-weight: 900;
       border: none;
-      border-radius: 12px;
-      padding: 0.75rem 2.4rem;
+      border-radius: 50px;
+      padding: 0.72rem 2.2rem;
       cursor: pointer;
       transition: transform 0.18s, box-shadow 0.18s;
-      position: relative;
-      overflow: hidden;
       white-space: nowrap;
     }
     .btn-generate:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 32px var(--accent-glow);
+      box-shadow: 0 8px 28px rgba(245,165,29,0.4);
     }
     .btn-generate:active { transform: translateY(0); }
-    .btn-generate:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
-      transform: none;
-    }
+    .btn-generate:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
     .btn-generate .btn-loader {
       display: none;
-      width: 18px; height: 18px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-top-color: #fff;
+      width: 17px; height: 17px;
+      border: 2px solid rgba(19,16,10,0.3);
+      border-top-color: #13100A;
       border-radius: 50%;
       animation: spin 0.7s linear infinite;
       margin: 0 auto;
@@ -130,129 +122,107 @@
     .btn-generate.loading .btn-text { display: none; }
     .btn-generate.loading .btn-loader { display: block; }
 
-    /* ── Tag chips (type & resolution) ── */
-    .chip-group { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-    .chip {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: #94a3b8;
+    /* ── Toggle ── */
+    .toggle-track {
+      width: 36px; height: 20px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50px;
+      position: relative;
+      transition: background 0.2s;
       cursor: pointer;
-      font-family: 'Assistant', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 600;
-      padding: 0.35rem 0.85rem;
-      transition: all 0.15s;
-      user-select: none;
+      flex-shrink: 0;
     }
-    .chip:hover { border-color: var(--accent); color: var(--accent); }
-    .chip.active {
-      background: rgba(99,102,241,0.18);
-      border-color: var(--accent);
-      color: var(--accent);
+    .toggle-track.on { background: var(--yellow); }
+    .toggle-thumb {
+      position: absolute;
+      top: 2px;
+      width: 16px; height: 16px;
+      background: white;
+      border-radius: 50%;
+      transition: left 0.2s, right 0.2s;
+    }
+    /* RTL: right side = ON */
+    .toggle-track.on  .toggle-thumb { right: 2px; left: auto; }
+    .toggle-track.off .toggle-thumb { left: 2px; right: auto; }
+
+    /* ── Section label ── */
+    .section-label {
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.55rem;
     }
 
-    /* ── Output card ── */
-    .output-section {
-      display: none;
-      animation: fadeUp 0.35s ease;
-    }
+    /* ── Divider ── */
+    hr.divider { border: none; border-top: 1px solid var(--border); margin: 1.3rem 0; }
+
+    /* ── Output ── */
+    .output-section { display: none; animation: fadeUp 0.3s ease; }
     .output-section.visible { display: block; }
 
     pre.prompt-output {
-      background: rgba(0,0,0,0.35);
-      border: 1px solid var(--border);
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(245,196,0,0.1);
       border-radius: 10px;
-      color: #a5b4fc;
+      color: #C8B87A;
       font-family: 'Courier New', monospace;
-      font-size: 0.82rem;
-      line-height: 1.65;
-      padding: 1.2rem 1.4rem;
+      font-size: 0.8rem;
+      line-height: 1.6;
+      padding: 1.1rem 1.3rem;
       white-space: pre-wrap;
       word-break: break-word;
-      max-height: 260px;
+      max-height: 280px;
       overflow-y: auto;
     }
 
-    /* ── Copy button ── */
+    /* ── Copy btn ── */
     .btn-copy {
       background: transparent;
       border: 1px solid var(--border);
       border-radius: 8px;
-      color: #94a3b8;
+      color: var(--muted);
       cursor: pointer;
-      font-family: 'Assistant', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 600;
-      padding: 0.4rem 1rem;
+      font-size: 0.83rem;
+      font-weight: 700;
+      padding: 0.35rem 0.95rem;
       transition: all 0.15s;
     }
-    .btn-copy:hover { border-color: var(--accent); color: var(--accent); }
-    .btn-copy.copied { border-color: #34d399; color: #34d399; }
-
-    /* ── Section label ── */
-    .section-label {
-      color: #64748b;
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 0.6rem;
-    }
-
-    /* ── Gradient text ── */
-    .gradient-text {
-      background: linear-gradient(90deg, #818cf8, #c4b5fd);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    /* ── Animations ── */
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(12px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes pulse-ring {
-      0%   { box-shadow: 0 0 0 0 var(--accent-glow); }
-      70%  { box-shadow: 0 0 0 10px rgba(99,102,241,0); }
-      100% { box-shadow: 0 0 0 0 rgba(99,102,241,0); }
-    }
+    .btn-copy:hover { border-color: var(--yellow); color: var(--yellow); }
+    .btn-copy.copied { border-color: #6ee7b7; color: #6ee7b7; }
 
     /* ── Toast ── */
     .toast {
       position: fixed;
-      bottom: 1.5rem;
-      left: 50%;
+      bottom: 1.5rem; left: 50%;
       transform: translateX(-50%) translateY(60px);
-      background: #1e293b;
+      background: #2A2318;
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 0.7rem 1.4rem;
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: #a5b4fc;
-      transition: transform 0.3s ease;
+      padding: 0.65rem 1.3rem;
+      font-size: 0.85rem; font-weight: 700;
+      color: var(--yellow);
+      transition: transform 0.28s ease;
       z-index: 999;
-      white-space: nowrap;
       pointer-events: none;
     }
     .toast.show { transform: translateX(-50%) translateY(0); }
 
-    /* ── Divider ── */
-    .divider {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 1.4rem 0;
+    /* ── Yellow highlight text (like "superpowered") ── */
+    .highlight { color: var(--yellow); }
+    .highlight-coral { color: var(--coral); }
+
+    /* ── Animations ── */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* ── Responsive ── */
-    @media (max-width: 640px) {
+    @media (max-width: 600px) {
       .controls-row { flex-direction: column; }
-      .btn-generate { width: 100%; }
+      .btn-generate { width: 100%; text-align: center; }
     }
   </style>
 </head>
@@ -260,43 +230,53 @@
 
   <!-- ─── HEADER ─── -->
   <header class="site-header sticky top-0 z-50">
-    <div class="max-w-3xl mx-auto px-5 py-3.5 flex items-center justify-between">
-      <span class="text-lg font-bold tracking-tight">
-        Kompanion<span class="gradient-text">AI</span>
-        <span class="text-slate-500 font-normal text-sm mr-2">/ מחולל מסמכים</span>
-      </span>
-      <span class="text-xs text-slate-600 border border-slate-700 rounded-full px-3 py-1">
+    <div class="max-w-3xl mx-auto px-5 py-3 flex items-center justify-between">
+
+      <!-- Logo -->
+      <div class="flex items-center gap-2.5">
+        <!-- K icon -->
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="32" height="32" rx="7" fill="#F5C400"/>
+          <path d="M9 7h4v6.5l5-6.5h4.5L16 15.5 23 25h-4.5L13 18l-0 1v6H9V7z" fill="white"/>
+        </svg>
+        <span class="logo-text text-lg text-white">KompanionAI</span>
+        <span style="color:var(--muted)" class="text-sm font-normal hidden sm:inline">/ מחולל מסמכים</span>
+      </div>
+
+      <span class="text-xs border rounded-full px-3 py-1" style="color:var(--muted);border-color:var(--border)">
         שימוש פנימי
       </span>
     </div>
   </header>
 
   <!-- ─── MAIN ─── -->
-  <main class="max-w-3xl mx-auto px-5 py-10 space-y-6">
+  <main class="max-w-3xl mx-auto px-5 py-10 space-y-5">
 
     <!-- Title -->
-    <div class="text-center mb-8">
-      <h1 class="text-2xl font-bold mb-1.5 gradient-text">מה תרצה ליצור היום?</h1>
-      <p class="text-slate-400 text-sm">תאר את המסמך שאתה צריך – הסגנון, התוכן, המטרה</p>
+    <div class="text-center mb-6">
+      <h1 class="text-2xl font-bold mb-1.5">
+        מה תרצה <span class="highlight">ליצור</span> היום?
+      </h1>
+      <p class="text-sm" style="color:var(--muted)">תאר את המסמך – סגנון, תוכן, מטרה – ותקבל פרומפט ממותג מוכן</p>
     </div>
 
-    <!-- ─── PROMPT CARD ─── -->
+    <!-- ─── MAIN CARD ─── -->
     <div class="card card-glow p-5 space-y-5">
 
-      <!-- Prompt textarea -->
+      <!-- Prompt -->
       <div>
         <div class="section-label">תיאור המסמך</div>
-        <textarea
-          id="promptInput"
-          rows="7"
-          placeholder="לדוגמה: צור הצעת מחיר ללקוח עם הלוגו שלי, פלטת הצבעים של הברנד, שני עמודים, כולל מחירים וטבלת שירותים. סגנון מקצועי ונקי."
-          class="p-4"
-        ></textarea>
+        <textarea id="promptInput" rows="7"
+          placeholder="לדוגמה: צור הצעת מחיר ללקוח עם לוגו KompanionAI, פלטת הצבעים הצהובה-כהה, שני עמודים, מחירים + טבלת שירותים. סגנון מקצועי ונקי."
+          class="p-4"></textarea>
+        <div class="text-left mt-1.5">
+          <span class="text-xs" style="color:var(--muted)">Ctrl+Enter לשליחה מהירה</span>
+        </div>
       </div>
 
       <hr class="divider" />
 
-      <!-- Document type -->
+      <!-- Doc type -->
       <div>
         <div class="section-label">סוג קובץ</div>
         <div class="chip-group" id="docTypeGroup">
@@ -327,29 +307,26 @@
 
       <hr class="divider" />
 
-      <!-- Controls row -->
+      <!-- Controls -->
       <div class="controls-row flex items-center justify-between gap-3">
-        <div class="flex items-center gap-3 flex-wrap">
-          <!-- Quality toggle -->
-          <label class="flex items-center gap-2 text-sm text-slate-400 cursor-pointer select-none">
-            <div class="toggle-wrap relative w-9 h-5">
-              <input type="checkbox" id="brandedToggle" class="sr-only peer" checked />
-              <div class="w-9 h-5 bg-slate-700 peer-checked:bg-indigo-600 rounded-full transition-colors"></div>
-              <div class="absolute top-0.5 right-0.5 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-0 translate-x-[-16px]"></div>
+
+        <!-- Toggles -->
+        <div class="flex items-center gap-4 flex-wrap">
+          <label class="flex items-center gap-2 cursor-pointer select-none text-sm" style="color:var(--muted)" onclick="toggleSwitch('brandedToggle')">
+            <div class="toggle-track on" id="brandedToggle" data-state="on">
+              <div class="toggle-thumb"></div>
             </div>
             ממותג
           </label>
-          <label class="flex items-center gap-2 text-sm text-slate-400 cursor-pointer select-none">
-            <div class="toggle-wrap relative w-9 h-5">
-              <input type="checkbox" id="hebrewToggle" class="sr-only peer" checked />
-              <div class="w-9 h-5 bg-slate-700 peer-checked:bg-indigo-600 rounded-full transition-colors"></div>
-              <div class="absolute top-0.5 right-0.5 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-0 translate-x-[-16px]"></div>
+          <label class="flex items-center gap-2 cursor-pointer select-none text-sm" style="color:var(--muted)" onclick="toggleSwitch('hebrewToggle')">
+            <div class="toggle-track on" id="hebrewToggle" data-state="on">
+              <div class="toggle-thumb"></div>
             </div>
             עברית
           </label>
         </div>
 
-        <!-- Generate button -->
+        <!-- Button -->
         <button class="btn-generate" id="generateBtn" onclick="handleGenerate()">
           <span class="btn-text">⚡ Generate</span>
           <span class="btn-loader"></span>
@@ -358,24 +335,24 @@
     </div>
 
     <!-- ─── OUTPUT CARD ─── -->
-    <div class="card p-5 space-y-4 output-section" id="outputSection">
+    <div class="card p-5 space-y-3 output-section" id="outputSection">
       <div class="flex items-center justify-between">
-        <div class="text-sm font-bold text-slate-300">הפרומפט שנוצר</div>
+        <div class="text-sm font-bold" style="color:#C8B87A">הפרומפט שנוצר</div>
         <button class="btn-copy" id="copyBtn" onclick="copyPrompt()">העתק</button>
       </div>
       <pre class="prompt-output" id="outputText"></pre>
-      <p class="text-xs text-slate-500 text-center">
-        ← העתק את הפרומפט ושלח לכלי AI המועדף עליך לייצור הקובץ הסופי
+      <p class="text-xs text-center" style="color:var(--muted)">
+        העתק ושלח לכלי AI שלך ליצירת הקובץ הסופי
       </p>
     </div>
 
   </main>
 
-  <!-- ─── TOAST ─── -->
+  <!-- Toast -->
   <div class="toast" id="toast"></div>
 
   <script>
-    // ── Chip selection (single select per group) ──
+    // ── Chip single-select ──
     document.querySelectorAll('.chip-group').forEach(group => {
       group.querySelectorAll('.chip').forEach(chip => {
         chip.addEventListener('click', () => {
@@ -385,75 +362,86 @@
       });
     });
 
-    // ── Toggle fix (RTL peer-checked trick) ──
-    document.querySelectorAll('.toggle-wrap').forEach(wrap => {
-      const input = wrap.querySelector('input');
-      const thumb = wrap.querySelector('.w-4');
-      function syncThumb() {
-        thumb.style.transform = input.checked ? 'translateX(0)' : 'translateX(-16px)';
-        thumb.style.right = input.checked ? '0.125rem' : 'auto';
-        thumb.style.left  = input.checked ? 'auto' : '0.125rem';
-      }
-      syncThumb();
-      input.addEventListener('change', syncThumb);
+    // ── Toggle ──
+    function toggleSwitch(id) {
+      const el = document.getElementById(id);
+      const on = el.dataset.state === 'on';
+      el.dataset.state = on ? 'off' : 'on';
+      el.classList.toggle('on',  !on);
+      el.classList.toggle('off',  on);
+    }
+    // init off state
+    document.querySelectorAll('.toggle-track').forEach(el => {
+      if (el.dataset.state !== 'on') { el.classList.remove('on'); el.classList.add('off'); }
     });
 
-    // ── Get active chip value ──
-    function getActive(groupId) {
-      const chip = document.querySelector(`#${groupId} .chip.active`);
-      return chip ? chip.dataset.value : '';
+    function getToggle(id) { return document.getElementById(id).dataset.state === 'on'; }
+    function getActive(gid) {
+      const c = document.querySelector(`#${gid} .chip.active`);
+      return c ? c.dataset.value : '';
     }
 
-    // ── Brand info (placeholder – will be populated from screenshots) ──
+    // ── Brand data ──
     const BRAND = {
-      name:    'KompanionAI',
-      colors:  { primary: '#6366f1', secondary: '#818cf8', dark: '#0f172a', text: '#e2e8f0' },
-      fonts:   { heading: 'Assistant', body: 'Assistant' },
-      tone:    'מקצועי, חדשני, תמציתי',
-      logo:    'לוגו KompanionAI – שם + נקודת הדגשה בסגול'
+      name:   'KompanionAI',
+      logo:   'ריבוע מעוגל צהוב (#F5C400) עם אות K לבנה + כיתוב "KompanionAI" בפונט מעוגל',
+      colors: {
+        primary:    '#F5C400',  // צהוב זהב – צבע ראשי
+        cta:        '#F5A51D',  // כתום – כפתורי CTA
+        coral:      '#FA7C6E',  // קורל – הדגשות
+        dark:       '#13100A',  // רקע כהה
+        darkCard:   '#1C1810',  // רקע כרטיסים
+        cream:      '#FEF9E7',  // רקע בהיר / קרם
+        textLight:  '#F0EAD6',  // טקסט בהיר
+        textMuted:  '#7A6E58',  // טקסט משני
+      },
+      fonts:   { heading: 'Nunito ExtraBold', body: 'Assistant' },
+      style:   'חם, נועז, מודרני, פינות מעוגלות, לא קורפורייטי',
+      tone:    'מקצועי ונגיש, ישיר, AI-first',
+      product: 'פלטפורמת מכירות AI – שיחות קוליות אוטומטיות, SDR וירטואלי, outbound/inbound/follow-up',
     };
 
-    // ── Format labels ──
     const DOC_LABELS = {
       pdf:          'PDF מסמך',
-      word:         'Word מסמך (.docx)',
+      word:         'מסמך Word (.docx)',
       powerpoint:   'מצגת PowerPoint (.pptx)',
       canva:        'עיצוב Canva',
       png:          'תמונה PNG',
-      presentation: 'מצגת ויב / Wix Studio'
+      presentation: 'מצגת ויב / Wix Studio',
     };
 
     const RES_LABELS = {
-      'A4':     'A4 (210×297mm, לאורך)',
-      'A3':     'A3 (297×420mm)',
-      'Letter': 'Letter (8.5×11 אינץ׳)',
-      '1:1':    '1:1 – קווארדטי (לרשתות חברתיות)',
-      '16:9':   '16:9 – מסך רחב (1920×1080)',
-      '9:16':   '9:16 – סטורי אנכי (1080×1920)',
+      'A4':     'A4 – 210×297mm (לאורך)',
+      'A3':     'A3 – 297×420mm',
+      'Letter': 'Letter – 8.5×11 אינץ׳',
+      '1:1':    '1:1 – קווארדטי 1080×1080 (רשתות חברתיות)',
+      '16:9':   '16:9 – מסך רחב 1920×1080',
+      '9:16':   '9:16 – סטורי אנכי 1080×1920',
       '4:3':    '4:3 – מצגת קלאסית',
       '6:9':    '6:9 – אנכי מורחב',
-      '9:6':    '9:6 – אופקי מותאם'
+      '9:6':    '9:6 – אופקי מותאם',
     };
 
-    // ── Build the prompt ──
     function buildPrompt({ userDesc, docType, resolution, branded, hebrew }) {
       const docLabel = DOC_LABELS[docType] || docType;
       const resLabel = RES_LABELS[resolution] || resolution;
-      const lang     = hebrew ? 'עברית (RTL)' : 'אנגלית';
+      const lang     = hebrew ? 'עברית (RTL, מימין לשמאל)' : 'אנגלית';
 
-      let brandBlock = '';
-      if (branded) {
-        brandBlock = `
-## מיתוג העסק
-- שם: ${BRAND.name}
-- צבע ראשי: ${BRAND.colors.primary}
-- צבע משני: ${BRAND.colors.secondary}
-- רקע: ${BRAND.colors.dark}
-- פונטים: ${BRAND.fonts.heading} לכותרות, ${BRAND.fonts.body} לגוף הטקסט
-- טון: ${BRAND.tone}
+      const brandBlock = branded ? `
+## מיתוג KompanionAI
+- שם המותג: ${BRAND.name}
 - לוגו: ${BRAND.logo}
-- יש להשתמש בפלטת הצבעים, הפונטים והסגנון הויזואלי של הברנד בכל אלמנט במסמך`;
-      }
+- צבע ראשי (Primary): ${BRAND.colors.primary} – צהוב זהב
+- צבע CTA: ${BRAND.colors.cta} – כתום
+- אקסנט: ${BRAND.colors.coral} – קורל/ורוד
+- רקע כהה: ${BRAND.colors.dark}
+- רקע בהיר/קרם: ${BRAND.colors.cream}
+- פונט כותרות: ${BRAND.fonts.heading}
+- פונט גוף: ${BRAND.fonts.body}
+- סגנון עיצובי: ${BRAND.style}
+- טון: ${BRAND.tone}
+- על המוצר: ${BRAND.product}
+- יש לשמור על עקביות מלאה עם זהות הברנד בכל אלמנט ויזואלי` : '';
 
       return `# בקשה ליצירת מסמך מעוצב
 
@@ -472,52 +460,47 @@ ${userDesc.trim()}
 
 ## הנחיות עיצוב
 - עיצוב נקי, מודרני ומקצועי
-- שימוש עקבי בפלטת הצבעים המוגדרת
-- קריאות מרבית – היררכיה ברורה בין כותרות ותוכן
-- רווחים נאותים (padding/margin) לנוחות קריאה
-- אם מדובר בהצגה – כל שקף מכיל מסר אחד ברור
+- שימוש עקבי בפלטת הצבעים
+- היררכיה ברורה: כותרות → תת-כותרות → גוף
+- רווחים נדיבים, פינות מעוגלות
+- אם מצגת – מסר אחד ברור לכל שקף
 
 ## הנחיות טכניות
-- יצא כ-${docLabel}
-- רזולוציה: ${resLabel}
-- כל האלמנטים חייבים להיות בתוך גבולות הקובץ
-- ודא שהגופנים נתמכים ומוטמעים`;
+- פורמט פלט: ${docLabel}
+- רזולוציה / גודל: ${resLabel}
+- כל אלמנטים בתוך גבולות הקובץ
+- פונטים מוטמעים / זמינים לווב`;
     }
 
-    // ── Handle Generate ──
     function handleGenerate() {
       const userDesc = document.getElementById('promptInput').value.trim();
       if (!userDesc) {
-        showToast('נא לכתוב תיאור של המסמך הרצוי');
+        showToast('נא לכתוב תיאור של המסמך');
         document.getElementById('promptInput').focus();
         return;
       }
-
       const btn = document.getElementById('generateBtn');
-      btn.classList.add('loading');
-      btn.disabled = true;
+      btn.classList.add('loading'); btn.disabled = true;
 
       setTimeout(() => {
-        const docType    = getActive('docTypeGroup');
-        const resolution = getActive('resolutionGroup');
-        const branded    = document.getElementById('brandedToggle').checked;
-        const hebrew     = document.getElementById('hebrewToggle').checked;
-
-        const prompt = buildPrompt({ userDesc, docType, resolution, branded, hebrew });
+        const prompt = buildPrompt({
+          userDesc,
+          docType:    getActive('docTypeGroup'),
+          resolution: getActive('resolutionGroup'),
+          branded:    getToggle('brandedToggle'),
+          hebrew:     getToggle('hebrewToggle'),
+        });
 
         document.getElementById('outputText').textContent = prompt;
-        const outputSection = document.getElementById('outputSection');
-        outputSection.classList.add('visible');
-        outputSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        const out = document.getElementById('outputSection');
+        out.classList.add('visible');
+        out.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-        btn.classList.remove('loading');
-        btn.disabled = false;
-
-        showToast('הפרומפט מוכן! ✓');
-      }, 900);
+        btn.classList.remove('loading'); btn.disabled = false;
+        showToast('הפרומפט מוכן ✓');
+      }, 800);
     }
 
-    // ── Copy prompt ──
     function copyPrompt() {
       const text = document.getElementById('outputText').textContent;
       navigator.clipboard.writeText(text).then(() => {
@@ -525,16 +508,10 @@ ${userDesc.trim()}
         btn.textContent = '✓ הועתק';
         btn.classList.add('copied');
         showToast('הועתק ללוח!');
-        setTimeout(() => {
-          btn.textContent = 'העתק';
-          btn.classList.remove('copied');
-        }, 2000);
-      }).catch(() => {
-        showToast('לא ניתן להעתיק – בחר ידנית');
-      });
+        setTimeout(() => { btn.textContent = 'העתק'; btn.classList.remove('copied'); }, 2000);
+      }).catch(() => showToast('בחר ידנית – CTRL+A'));
     }
 
-    // ── Toast helper ──
     let toastTimer;
     function showToast(msg) {
       const el = document.getElementById('toast');
@@ -544,7 +521,6 @@ ${userDesc.trim()}
       toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
     }
 
-    // ── Enter shortcut (Ctrl/Cmd + Enter) ──
     document.getElementById('promptInput').addEventListener('keydown', e => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') handleGenerate();
     });
