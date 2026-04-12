@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KompanionAI – Activity Summary Report</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap');
+
+    * { font-family: 'Assistant', sans-serif; }
+
+    body {
+      background: #0f172a;
+      color: white;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .accent { color: #818cf8; }
+
+    .gradient-header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+    }
+
+    .card-dark {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #818cf8, #c4b5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .cta-gradient {
+      background: linear-gradient(135deg, #6366f1, #818cf8);
+    }
+
+    .badge {
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      color: #a5b4fc;
+    }
+
+    .trend-up {
+      background: rgba(129, 140, 248, 0.08);
+      border: 1px solid rgba(129, 140, 248, 0.2);
+      color: #818cf8;
+    }
+
+    .campaign-best {
+      background: rgba(99, 102, 241, 0.08);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+    }
+
+    .campaign-base {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .insight-card {
+      background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+      border: 1px solid rgba(129,140,248,0.2);
+    }
+
+    .dot-accent {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #818cf8;
+      flex-shrink: 0;
+      margin-top: 6px;
+    }
+
+    .dot-red {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #f87171;
+      flex-shrink: 0;
+      margin-top: 6px;
+    }
+
+    .save-btn {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: linear-gradient(135deg, #6366f1, #818cf8);
+      color: white;
+      font-weight: 700;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.75rem;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      box-shadow: 0 8px 30px rgba(99,102,241,0.4);
+      transition: all 0.2s ease;
+    }
+
+    .save-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(99,102,241,0.5);
+    }
+
+    @media print {
+      .save-btn { display: none !important; }
+      body { margin: 0; }
+    }
+
+    @page {
+      margin: 0.5cm;
+      size: A4;
+    }
+  </style>
+</head>
+<body>
+  <div class="max-w-4xl mx-auto px-8 py-12">
+
+    <!-- HEADER -->
+    <div class="gradient-header rounded-3xl p-10 mb-8">
+      <div class="flex items-start justify-between mb-8">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl font-bold tracking-tight">Kompanion<span class="accent">AI</span></span>
+          <span class="badge text-xs font-semibold px-3 py-1 rounded-full">Activity Report</span>
+        </div>
+        <div class="text-right">
+          <div class="font-bold text-white text-base">Mar 30 – Apr 10, 2025</div>
+          <div class="text-slate-400 text-sm mt-0.5">Last 10 Days Summary</div>
+        </div>
+      </div>
+      <h1 class="text-4xl font-extrabold mb-2 leading-tight">Activity Summary</h1>
+      <p class="text-slate-300 text-lg">Campaign performance overview — last 10 days of outbound activity</p>
+    </div>
+
+    <!-- TOP STATS -->
+    <div class="grid grid-cols-3 gap-4 mb-8">
+      <div class="card-dark rounded-2xl p-6 text-center">
+        <div class="stat-number">259</div>
+        <div class="text-slate-400 mt-1 font-medium">Total Dials</div>
+      </div>
+      <div class="card-dark rounded-2xl p-6 text-center">
+        <div class="stat-number">33</div>
+        <div class="text-slate-400 mt-1 font-medium">Calls Answered</div>
+      </div>
+      <div class="card-dark rounded-2xl p-6 text-center">
+        <div class="stat-number">12.7%</div>
+        <div class="text-slate-400 mt-1 font-medium">Connect Rate</div>
+      </div>
+    </div>
+
+    <!-- OUTCOMES + POSITIVE SIGNALS -->
+    <div class="grid grid-cols-2 gap-6 mb-8">
+
+      <!-- Outcomes -->
+      <div class="card-dark rounded-2xl p-7">
+        <h2 class="text-xl font-bold mb-5">Outcomes</h2>
+        <div class="space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="text-slate-300">Follow-ups</span>
+            <span class="font-bold text-white text-lg">11</span>
+          </div>
+          <div class="border-t border-white/5"></div>
+          <div class="flex justify-between items-center">
+            <span class="text-slate-300">Meetings booked</span>
+            <span class="font-bold accent text-lg">3</span>
+          </div>
+          <div class="border-t border-white/5"></div>
+          <div class="flex justify-between items-center">
+            <span class="text-slate-300">Not interested / not relevant</span>
+            <span class="font-bold text-slate-400 text-lg">3</span>
+          </div>
+          <div class="border-t border-white/5"></div>
+          <div class="flex justify-between items-center">
+            <span class="text-slate-300">AI-related objections</span>
+            <span class="font-bold text-slate-400 text-lg">4</span>
+          </div>
+          <div class="border-t border-white/5"></div>
+          <div class="flex justify-between items-center">
+            <span class="text-slate-300">Wrong numbers</span>
+            <span class="font-bold text-slate-400 text-lg">2</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Positive signals -->
+      <div class="card-dark rounded-2xl p-7">
+        <h2 class="text-xl font-bold mb-5">Positive Signals</h2>
+        <div class="space-y-4">
+          <div class="flex items-start gap-3">
+            <div class="dot-accent"></div>
+            <p class="text-slate-300 leading-relaxed">Multiple <strong class="text-white">high-quality conversations</strong> (5–10 min)</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="dot-accent"></div>
+            <p class="text-slate-300 leading-relaxed"><strong class="text-white">3 meetings booked</strong> — strong step forward vs. previous period</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="dot-accent"></div>
+            <p class="text-slate-300 leading-relaxed">Clear improvement in <strong class="text-white">conversation depth and engagement quality</strong></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PERIOD COMPARISON -->
+    <div class="card-dark rounded-2xl p-8 mb-8">
+      <h2 class="text-2xl font-bold mb-6">Period Comparison</h2>
+
+      <div class="overflow-hidden rounded-xl border border-white/10">
+        <table class="w-full text-sm">
+          <thead>
+            <tr style="background: rgba(99,102,241,0.15);">
+              <th class="text-left px-5 py-4 font-semibold text-slate-300">Metric</th>
+              <th class="text-center px-5 py-4 font-semibold text-slate-300">First 10 Days</th>
+              <th class="text-center px-5 py-4 font-semibold text-white">Last 10 Days</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-t border-white/5">
+              <td class="px-5 py-4 text-slate-300">Dials</td>
+              <td class="px-5 py-4 text-center text-slate-400">680</td>
+              <td class="px-5 py-4 text-center font-semibold text-white">259</td>
+            </tr>
+            <tr class="border-t border-white/5" style="background: rgba(255,255,255,0.02)">
+              <td class="px-5 py-4 text-slate-300">Answered</td>
+              <td class="px-5 py-4 text-center text-slate-400">34</td>
+              <td class="px-5 py-4 text-center font-semibold text-white">33</td>
+            </tr>
+            <tr class="border-t border-white/5">
+              <td class="px-5 py-4 text-slate-300">Connect Rate</td>
+              <td class="px-5 py-4 text-center text-slate-400">~5.0%</td>
+              <td class="px-5 py-4 text-center font-bold accent">~12.7% ↑</td>
+            </tr>
+            <tr class="border-t border-white/5" style="background: rgba(255,255,255,0.02)">
+              <td class="px-5 py-4 text-slate-300">Follow-ups</td>
+              <td class="px-5 py-4 text-center text-slate-400">8</td>
+              <td class="px-5 py-4 text-center font-bold accent">11 ↑</td>
+            </tr>
+            <tr class="border-t border-white/5">
+              <td class="px-5 py-4 text-slate-300">Meetings</td>
+              <td class="px-5 py-4 text-center text-slate-400">2</td>
+              <td class="px-5 py-4 text-center font-bold accent">3 ↑</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid grid-cols-3 gap-4 mt-6">
+        <div class="trend-up rounded-xl p-4 text-center">
+          <div class="font-bold text-lg">5% → 12.7%</div>
+          <div class="text-xs mt-1 opacity-75">Connect Rate</div>
+        </div>
+        <div class="trend-up rounded-xl p-4 text-center">
+          <div class="font-bold text-lg">8 → 11</div>
+          <div class="text-xs mt-1 opacity-75">Follow-ups</div>
+        </div>
+        <div class="trend-up rounded-xl p-4 text-center">
+          <div class="font-bold text-lg">2 → 3</div>
+          <div class="text-xs mt-1 opacity-75">Meetings Booked</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CAMPAIGN COMPARISON -->
+    <div class="card-dark rounded-2xl p-8 mb-8">
+      <h2 class="text-2xl font-bold mb-6">Campaign Comparison</h2>
+
+      <div class="grid grid-cols-2 gap-6">
+
+        <!-- Campaign 1 -->
+        <div class="campaign-base rounded-xl p-6">
+          <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Campaign 1</div>
+          <h3 class="font-bold text-lg text-white mb-4">KubeCon '23</h3>
+          <div class="space-y-3 text-sm">
+            <div class="flex justify-between">
+              <span class="text-slate-400">Total Dials</span>
+              <span class="font-semibold text-white">740</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Answered</span>
+              <span class="font-semibold text-white">39</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Follow-ups</span>
+              <span class="font-semibold text-white">11</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Meetings</span>
+              <span class="font-semibold text-white">2</span>
+            </div>
+            <div class="border-t border-white/10 pt-2.5 flex justify-between">
+              <span class="text-slate-400 font-medium">Connect Rate</span>
+              <span class="font-bold text-slate-300">~5.3%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Campaign 2 -->
+        <div class="campaign-best rounded-xl p-6">
+          <div class="text-xs font-semibold text-indigo-400 uppercase tracking-wider mb-1">Campaign 2 · Best Performer</div>
+          <h3 class="font-bold text-lg text-white mb-4">DevOps Live London – Cold Outbound</h3>
+          <div class="space-y-3 text-sm">
+            <div class="flex justify-between">
+              <span class="text-slate-400">Total Dials</span>
+              <span class="font-semibold text-white">199</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Answered</span>
+              <span class="font-semibold text-white">28</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Follow-ups</span>
+              <span class="font-semibold text-white">11</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Meetings</span>
+              <span class="font-bold accent">3</span>
+            </div>
+            <div class="border-t border-indigo-500/20 pt-2.5 flex justify-between">
+              <span class="text-slate-400 font-medium">Connect Rate</span>
+              <span class="font-bold accent">~14.1% ↑</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-5 text-sm text-slate-300 bg-indigo-500/5 border border-indigo-500/10 rounded-xl p-4 leading-relaxed">
+        <strong class="text-white">Takeaway:</strong> Campaign 2 delivers <strong class="text-white">~3× higher connect rate</strong> and more meetings with significantly lower volume — strong indication of better audience relevance and timing.
+      </div>
+    </div>
+
+    <!-- KEY INSIGHT -->
+    <div class="insight-card rounded-3xl p-8 mb-8">
+      <h2 class="text-2xl font-bold mb-1">Key Insight</h2>
+      <p class="text-indigo-300 text-sm mb-6">Most important signal this period</p>
+
+      <div class="space-y-3 mb-6">
+        <div class="flex items-start gap-3">
+          <div class="dot-accent"></div>
+          <p class="text-slate-200">Conversations are <strong class="text-white">longer and more engaged</strong></p>
+        </div>
+        <div class="flex items-start gap-3">
+          <div class="dot-accent"></div>
+          <p class="text-slate-200">Prospects are <strong class="text-white">more willing to continue and book meetings</strong></p>
+        </div>
+        <div class="flex items-start gap-3">
+          <div class="dot-accent"></div>
+          <p class="text-slate-200">The system is not just generating conversations — it is now generating <strong class="text-white">pipeline signals (meetings)</strong></p>
+        </div>
+      </div>
+
+      <div class="border-t border-white/10 pt-5">
+        <p class="text-sm text-slate-500 font-semibold uppercase tracking-wider mb-3">Friction Points to Address</p>
+        <div class="space-y-2.5">
+          <div class="flex items-start gap-3">
+            <div class="dot-red"></div>
+            <p class="text-slate-300 text-sm">AI objection still exists as a friction point</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="dot-red"></div>
+            <p class="text-slate-300 text-sm">Some disconnects are directly tied to <strong class="text-white">AI disclosure timing</strong></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIRECTION FORWARD -->
+    <div class="card-dark rounded-2xl p-8 mb-10">
+      <h2 class="text-2xl font-bold mb-6">Direction Forward</h2>
+      <div class="grid grid-cols-2 gap-5">
+
+        <div class="flex items-start gap-4">
+          <div class="w-9 h-9 rounded-lg cta-gradient flex items-center justify-center flex-shrink-0 text-sm font-extrabold">1</div>
+          <div>
+            <p class="font-bold text-white">Scale volume on current campaign</p>
+            <p class="text-slate-400 text-sm mt-1">Continue scaling DevOps Live London outbound</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+          <div class="w-9 h-9 rounded-lg cta-gradient flex items-center justify-center flex-shrink-0 text-sm font-extrabold">2</div>
+          <div>
+            <p class="font-bold text-white">Refine AI disclosure handling</p>
+            <p class="text-slate-400 text-sm mt-1">Optimize timing and phrasing of AI disclosure</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+          <div class="w-9 h-9 rounded-lg cta-gradient flex items-center justify-center flex-shrink-0 text-sm font-extrabold">3</div>
+          <div>
+            <p class="font-bold text-white">Focus on decision-makers</p>
+            <p class="text-slate-400 text-sm mt-1">Keep optimizing for decision-maker conversations</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+          <div class="w-9 h-9 rounded-lg cta-gradient flex items-center justify-center flex-shrink-0 text-sm font-extrabold">4</div>
+          <div>
+            <p class="font-bold text-white">Maintain follow-up momentum</p>
+            <p class="text-slate-400 text-sm mt-1">Strong conversion already visible — keep pushing</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="flex items-center justify-between text-slate-500 text-sm border-t border-white/5 pt-6">
+      <span class="font-bold text-white text-base">Kompanion<span style="color: #818cf8">AI</span></span>
+      <span>Activity Report · Mar 30 – Apr 10, 2025</span>
+      <span>Confidential</span>
+    </div>
+
+  </div>
+
+  <button class="save-btn" onclick="window.print()">Save as PDF</button>
+
+</body>
+</html>
